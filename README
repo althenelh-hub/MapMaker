@@ -1,0 +1,39 @@
+This version focuses on developing the redactable map, which is in fact JPanel (paintPanel in Window.java)
+on which user will paint his tiles and units by mouseClicks.
+
+Because map consists of different colors i need a way repaint a map which user is redacting after the window was
+invalidated by size change or hide/show.
+The solution to this problem is buffered image in which all maps paint actions will be duplicated and later used
+in case of window invalidation to copy whole image on JPanel at once.
+
+Here arises another issue there is a need
+to separate paint instructions used for different cases and at the same tile it'll be better for the code
+extendability to avoid usage of conditional statements. The idea is to use state pattern and for that purpose
+interface PaintInstruction and class InstructedPaintPanel were created. paintInstruction is in fact "instructions"
+of what exactly should be painted on JPanel. InstructedPaintPanel uses instruction object in its paintComponent
+method to realise code inside PaintInstruction.
+
+image buffer and instructed panel will be used together, because every paint action on the panel will be
+duplicated on buffer, therefore there is a need to contain them in the class there painting they both will be
+painted. There is two approaches for that inheritance and aggregation. Inheritance may give us more extendability
+in the way that we can use this class in the place of instructed panel, however here arises the problem with
+default paint instruction, which is supposed to be a buffer image coping, seeing that must be a way to set
+default paint instruction to instructed panel. In case with inheritance with can create a method in new class
+but that will destroy the purpose of us using inheritance, because we won't be able to use this new class as
+instructed panel. We can set default instruction in paintComponent method, but this way it will be called every
+time panel paints something or default paint set instruction can be place inside other paintInstruction classes,
+this however will make them more complex and less reusable. For purpose of setting default instruction it is more
+beneficial to use aggregation which still allows us to use different types of instructed panel inside it.
+
+Tiles are painted by processing mouse click events in which we need coordinate of mouse click to determine in
+which grid cell tile is need to be painted. (In this version tiles are painted outside grid).
+
+
+Can create tiles
+
+Created BufferedPaintPanelV2: paints in panel and buffer. I use agregation instead of inheritance because i
+need a way to set default instruction, which should be hidden from outside to not bother in further development
+and with inheritance i wouldn't know when to set default instruction back/
+
+But the problem of setting default instruction still stands. Now BufferedPaintPanelV2 calls
+SwingUtilities.invokeLater() for setting default instruction for every time instruction changes.

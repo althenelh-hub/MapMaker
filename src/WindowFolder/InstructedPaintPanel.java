@@ -9,9 +9,12 @@ public class InstructedPaintPanel extends JPanel {
     PaintInstruction instruction;
     @Override
     public void paintComponent(Graphics g) {
+        System.out.println(instruction + "Before super");
         super.paintComponent(g);
+        System.out.println(instruction);
         instruction.fulify(g);
     }
+
     public void setInstruction(PaintInstruction instruction) {
         this.instruction = instruction;
     }

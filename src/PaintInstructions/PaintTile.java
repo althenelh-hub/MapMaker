@@ -5,4 +5,7 @@ public class PaintTile implements PaintInstruction {
     public void fulify(Graphics g) {
         g.fillRect(tilePosition.x, tilePosition.y, 19,19);
     }
+    public void setPosition(Point tilePosition) {
+        this.tilePosition = tilePosition;
+    }
 }
