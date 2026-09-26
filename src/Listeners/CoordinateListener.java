@@ -1,23 +1,27 @@
 package Listeners;
-import PaintInstructions.PaintTile;
-import WindowFolder.BufferedPaintPanelV2;
-import WindowFolder.InstructedPaintPanel;
+import Data.CellData;
+import PaintInstructions.*;
+import WindowFolder.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
-import javax.swing.JComponent;
-import java.awt.image.*;
-import Utilities.*;
-import Units.Unit;
-import Terrain.Terrain;
+import Data.MapData;
+
 public class CoordinateListener implements MouseListener { //TilePainter
-    PaintTile tileInstruction = new PaintTile();
+    HashMap<Form, PaintForm> forms = new HashMap<>();
     BufferedPaintPanelV2 paintPanel;
-    HashMap<Coordinate, Unit> units;
-    Terrain[][] map;
-    public CoordinateListener(BufferedPaintPanelV2 target) {
+    Painter painter;
+    MapGrid mapGrid;
+    MapData mapData;
+    public CoordinateListener(BufferedPaintPanelV2 target, MapGrid mapGrid) {
         paintPanel = target;
         paintPanel.setMouseListener(this);
+        this.mapGrid = mapGrid;
+        mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
+        painter = new Painter(target);
+        int lineWidth = mapGrid.getLineWidth();
+        int cellSize = mapGrid.getCellSize();
+        painter.manageAllInstructions (new Rectangle(lineWidth, lineWidth, cellSize, cellSize));
     }
     public void mouseClicked(MouseEvent e) {
         paintTile(e.getPoint());
@@ -36,8 +40,14 @@ public class CoordinateListener implements MouseListener { //TilePainter
 
     }
     public void paintTile(Point p) {
-        tileInstruction.setPosition(p);
-        paintPanel.paintInstruction(tileInstruction, p.x, p.y, 19,19);
+        Rectangle rect = mapGrid.getRectToFill(mapGrid.getCoordinate(p));
+        System.out.println("x:" + rect.x + " y: " + rect.y + " width " + rect.width + " height " + rect.height);
+        Point cell = mapGrid.getCoordinate(p);
+        if (mapData.containsUnit(cell)) {
+            CellData cellData = new CellData();
+            cellData.unit = mapData.getUnit(cell).name;
+
+        }
     }
 
 }

@@ -16,7 +16,7 @@ public class BufferedPaintPanel extends InstructedPaintPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics bufferGraphics = image.getGraphics();
-        instruction.fulify(bufferGraphics);
+        instruction.fulfill(bufferGraphics);
     }
     public void setDefaultInstruction() {
         instruction = defaultInstruction;

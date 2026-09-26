@@ -12,7 +12,7 @@ public class InstructedPaintPanel extends JPanel {
         System.out.println(instruction + "Before super");
         super.paintComponent(g);
         System.out.println(instruction);
-        instruction.fulify(g);
+        instruction.fulfill(g);
     }
 
     public void setInstruction(PaintInstruction instruction) {

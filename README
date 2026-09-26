@@ -28,12 +28,77 @@ beneficial to use aggregation which still allows us to use different types of in
 Tiles are painted by processing mouse click events in which we need coordinate of mouse click to determine in
 which grid cell tile is need to be painted. (In this version tiles are painted outside grid).
 
-
-Can create tiles
-
-Created BufferedPaintPanelV2: paints in panel and buffer. I use agregation instead of inheritance because i
-need a way to set default instruction, which should be hidden from outside to not bother in further development
-and with inheritance i wouldn't know when to set default instruction back/
-
-But the problem of setting default instruction still stands. Now BufferedPaintPanelV2 calls
+Instructions
+    GridInstruction - paints grid of provided of provided size and color.
+    PaintImage - paints stores image.
+    PaintTile - paints tile in provided position, which is set method setPosition().
+Coordinate - describes tile position in grid by row and column numbers.
+The problem of setting default instruction still stands. Now BufferedPaintPanelV2 calls
 SwingUtilities.invokeLater() for setting default instruction for every time instruction changes.
+
+I don't want to complicate PaintTile with coordinate calculation. It should get exact pixels to be painted. For
+that I need a class which returns coordinates of the cell and returns position and sizes of rect to fill the
+map cell. This class must be used in mouseListener cause there i get mouseEvents and also i need cellSize to fill
+in paintInstruction sizes. For that purpose MapGrid class was created.
+
+Now let's paint units. Units will be displayed by different shape - circles to differentiate from tiles. Also
+they need a new instruction for them. There also arises a problem of painting tile beneath unit, cause tile
+will cover a unit, and there's a need for a way to repaint it again. The solution is to store units in hashMap
+and on every click on the map check if it currently holds a unit. This solution brings another problem. How do
+we get information about the color of the unit. Unit itself should not store information about its color, because
+it is not its responsibility, but it may contain information about its in-game type allowing as to create
+HashMap<in-game type, Color> to get needed information. The problem comes that i need to change the shape of
+painting than i paint over unit. Current solution is to use two instructions in mouseListener. Giving
+information about unit to instruction will force a null check when there is no unit in tile.
+
+There is another question how should i paint shapes. First is to use to different instructions or should i put
+brush object inside instruction. Brush object will contain shape and color and polyform method to paint it. Second
+will force to create multiple brushes and method would be the same with instruction or should i create
+HashMap<Shape, inst> in paint instruction but still i will have to deal with unit drama and brings unnecessary
+complexity with hashmap and i either will have to use multiple states with hashmap state solution or not.
+
+The problem is what i need to know whether i paint tile or unit before click, I could set Instruction after
+clicking button of the unit or tile. After clicking an exact tile or unit i also need to set a color
+for instruction. Clicking button sets instruction, clicking exact object sets color. If creating brush object
+the shape must be a method, which basically equal the instruction.
+
+I want to set color and shape for PaintTile, but this way I won't be able to polyform it with instruction
+interface. First solution is create a new class with aggregated color, shape, which is instruction. I need
+to differ form painting and instructions so that i won't paint instruction as form. I need to change color
+only after clicking button if i store color at instruction it will change every time fulfilled. However
+access to Graphics will only be obtained during paintComponent, meaning i can't set color outside of it.
+Solved: every time paintComponent method called there is a new Graphics object, so either way i will have
+to set it up again.
+
+How do i set PaintForm. First solution is HashMap. Seconds buttons set instruction in BufferedPanel and
+listener than fills needed data, but this way i won't be able to paint tile over unit cause i need to give
+instruction of CirclePaint to BufferedPanel from listener, so I need to store instructions in listener.
+
+I can manage instruction color after clicking button in BufferedPaintPanel, avoiding setting a new instruction
+every click and MouseListener will only activate it
+This won't work cause i return default instruction after every paint, but may be useful if i found solution for setting
+default, means i need set instruction every paint action.
+
+(, but there is a issue with painting over unit, it is better
+to store name in button listener instead of color, giving us easier opportunity to change colors of
+different in-game types of units and also allows to change color in runtime, so we also need a hashMap of
+instructions cause storing name of category(unit, terrain) is more versatile allowing to draw different
+categories differently. So i need a class that will store hashMap of colors and PaintForms. I can create new
+method at BufferedPainPanelV2 which receives units in-game type to repaint it again. Pallet, canvas and painter.
+Pallet chooses color and form, canvas only paints and painter determines the logic of the paint.
+create a new PaintForm for unit which is fine cause it will be stored in stack, but can i get access to already
+existing PaintCircle. However this method will be more problematic with instruction field at BufferedPaintPanelV2)
+
+Should i store current PaintForm at BufferedPaintPanel or should i store at Painter. BufferedPaintPanel should stay simple.
+Buffered paint panel becomes too deep to access instruction maybe i should use inheritance instead
+cause it is stored in heap.
+
+MapGrid is responsible for converting point of click in the rect for the cell that needs to be filled.
+MapData stores information about already placed tiles and units.
+
+Instead of checking type of paintForm for repainting I will use paintLayer int field. And then give array of paintInstructions
+to the PaintPanel;
+
+Clicking on button sets shape.
+
+When i chose unit in sideBar I should set brush to circle

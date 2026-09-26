@@ -1,6 +1,7 @@
 package PaintInstructions;
 import java.awt.*;
-public class GridInstruction implements PaintInstruction { //think about saving color after resetting window
+import WindowFolder.*;
+public class GridInstruction extends LayeredInstruction { //think about saving color after resetting window
     int columns;
     int rows;
     int cellSize;
@@ -13,7 +14,14 @@ public class GridInstruction implements PaintInstruction { //think about saving 
         this.cellColor = cellColor;
         this.lineColor = lineColor;
     }
-    public void fulify(Graphics g) {
+    public GridInstruction(MapGrid grid, Color cellColor, Color lineColor) {
+        this.columns = grid.getColumnsCount();
+        this.rows = grid.getRowsCount();
+        this.cellSize = grid.getCellSize();
+        this.cellColor = cellColor;
+        this.lineColor = lineColor;
+    }
+    public void fulfill(Graphics g) {
         g.setColor(cellColor);
         g.fillRect(0, 0, columns*cellSize, rows*cellSize);
         g.setColor(lineColor);

@@ -1,11 +1,8 @@
 package PaintInstructions;
 import java.awt.*;
-public class PaintTile implements PaintInstruction {
-    Point tilePosition;
-    public void fulify(Graphics g) {
-        g.fillRect(tilePosition.x, tilePosition.y, 19,19);
+public class PaintTile extends PaintForm {
+    public void paintForm(Graphics g) {
+        g.fillRect(rect.x, rect.y, rect.width, rect.height);
     }
-    public void setPosition(Point tilePosition) {
-        this.tilePosition = tilePosition;
-    }
+
 }

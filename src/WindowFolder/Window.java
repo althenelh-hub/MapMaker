@@ -13,12 +13,13 @@ public class Window extends JFrame {
         setSize(300,300);
         setVisible(true);
         BufferedImage mapSave = new BufferedImage(300,300, BufferedImage.TYPE_INT_RGB);
-        GridInstruction grid = new GridInstruction(10,10,20,Color.RED, Color.BLACK);
+        MapGrid mapGrid = new MapGrid(10,10,20,1);
+        GridInstruction grid = new GridInstruction(mapGrid, Color.RED, Color.BLUE);
         InstructedPaintPanel paintPanel = new InstructedPaintPanel();
         add(paintPanel);
         BufferedPaintPanelV2 bufferedPanel = new BufferedPaintPanelV2(mapSave, paintPanel);
         bufferedPanel.paintInstruction(grid);
-        CoordinateListener listener = new CoordinateListener(bufferedPanel);
+        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid);
 
     }
 

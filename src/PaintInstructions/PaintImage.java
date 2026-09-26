@@ -6,7 +6,7 @@ public class PaintImage implements PaintInstruction {
         this.image = image;
     }
     BufferedImage image;
-    public void fulify(Graphics g) {
+    public void fulfill(Graphics g) {
         g.drawImage(image, 0,0,null);
     }
 }
