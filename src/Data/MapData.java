@@ -1,6 +1,6 @@
 package Data;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 import Terrain.*;
 public class MapData {
     HashMap<Point, Unit> units = new HashMap<>();
@@ -19,20 +19,15 @@ public class MapData {
     }
     public CellData getCellData(Point p) {
         CellData data = new CellData();
+        ArrayList<GameName> names = new ArrayList<>();
         if(containsTerrain(p)) {
-            data.tile = terrainMap[p.x][p.y];
-        }
-        else {
-            data.tile = new Terrain();
-            data.tile.name = GameName.EMPTY;
+            names.add(terrainMap[p.x][p.y].name);
         }
         if(containsUnit(p)) {
-            data.unit = units.get(p);
+            names.add(units.get(p).name);
         }
-        else {
-            data.unit = new Unit();
-            data.unit.name = GameName.EMPTY;
-        }
+        GameName[] result = new GameName[names.size()];
+        data.mapObjects = names.toArray(result);
         return data;
     }
     public Unit getUnit(Point coordinate) {

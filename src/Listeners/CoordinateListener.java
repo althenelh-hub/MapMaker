@@ -1,6 +1,7 @@
 package Listeners;
 import Data.CellData;
 import PaintInstructions.*;
+import Terrain.GameName;
 import WindowFolder.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -8,14 +9,11 @@ import java.util.*;
 import Data.MapData;
 
 public class CoordinateListener implements MouseListener { //TilePainter
-    HashMap<Form, PaintForm> forms = new HashMap<>();
-    BufferedPaintPanelV2 paintPanel;
     Painter painter;
     MapGrid mapGrid;
     MapData mapData;
-    public CoordinateListener(BufferedPaintPanelV2 target, MapGrid mapGrid) {
-        paintPanel = target;
-        paintPanel.setMouseListener(this);
+    public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid) {
+        target.setMouseListener(this);
         this.mapGrid = mapGrid;
         mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
         painter = new Painter(target);
@@ -41,13 +39,11 @@ public class CoordinateListener implements MouseListener { //TilePainter
     }
     public void paintTile(Point p) {
         Rectangle rect = mapGrid.getRectToFill(mapGrid.getCoordinate(p));
-        System.out.println("x:" + rect.x + " y: " + rect.y + " width " + rect.width + " height " + rect.height);
         Point cell = mapGrid.getCoordinate(p);
-        if (mapData.containsUnit(cell)) {
-            CellData cellData = new CellData();
-            cellData.unit = mapData.getUnit(cell).name;
+        painter.paintForm(mapData.getCellData(cell), rect);
+    }
+    public void removeElement(Point p, GameName name) {
 
-        }
     }
 
 }

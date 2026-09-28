@@ -1,9 +1,8 @@
 package WindowFolder;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.image.*;
+import java.util.ArrayList;
 
 import Listeners.CoordinateListener;
 import PaintInstructions.*;
@@ -12,15 +11,22 @@ public class Window extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(300,300);
         setVisible(true);
+        setLayout(new BorderLayout());
         BufferedImage mapSave = new BufferedImage(300,300, BufferedImage.TYPE_INT_RGB);
+        PaintImage imageInstruction = new PaintImage(mapSave);
+        QueuedInstructionPanel paintPanel = new QueuedInstructionPanel(imageInstruction);
+        BufferedQueuedPanelV2 bufferedPanel = new BufferedQueuedPanelV2(mapSave, paintPanel);
         MapGrid mapGrid = new MapGrid(10,10,20,1);
         GridInstruction grid = new GridInstruction(mapGrid, Color.RED, Color.BLUE);
-        InstructedPaintPanel paintPanel = new InstructedPaintPanel();
-        add(paintPanel);
-        BufferedPaintPanelV2 bufferedPanel = new BufferedPaintPanelV2(mapSave, paintPanel);
-        bufferedPanel.paintInstruction(grid);
+        ArrayList<PaintInstruction> instructions = new ArrayList<>();
+        instructions.add(grid);
+        paintPanel.setPreferredSize(new Dimension(300,300));
+        add(paintPanel, BorderLayout.CENTER);
+        add(new JPanel(), BorderLayout.LINE_START);
+        bufferedPanel.paintInstructions(instructions, new Rectangle(0,0,300,300));
         CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid);
-
+        //paintPanel.setAlignmentX();
+        System.out.println("window " + paintPanel.getBounds());
     }
 
     public static void main(String[] args) {

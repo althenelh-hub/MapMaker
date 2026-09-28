@@ -7,6 +7,7 @@ public class MapGrid {
     int rows;
     int cellSize;
     int lineWidth;
+    Point startingPoint;
     public MapGrid(int columns, int rows, int cellSize, int lineWidth) {
         this.columns = columns;
         this.rows = rows;
@@ -14,8 +15,11 @@ public class MapGrid {
         this.lineWidth = lineWidth;
     }
     public Point getCoordinate(Point point) {
-        if(point.x < columns*(cellSize+lineWidth) && point.y < rows*(cellSize + lineWidth)) { //later change for exception
-            return new Point(point.x / (cellSize+lineWidth), point.y / (cellSize + lineWidth));
+        int borderedCell = cellSize+lineWidth;
+        int mapWidth = columns*borderedCell+lineWidth;
+        int mapHeight = rows*borderedCell+lineWidth;
+        if(point.x < mapWidth && point.y < mapHeight) { //later change for exception
+            return new Point(point.x / borderedCell, point.y / borderedCell);
         }
         else {
             return null;
@@ -23,8 +27,8 @@ public class MapGrid {
     }
     public Rectangle getRectToFill(Point point) { //returns rectangle that needs to be filled in coordinate
         System.out.println(point);
-        return new Rectangle(point.x*(cellSize+lineWidth), point.y*(cellSize+lineWidth),
-                cellSize-lineWidth, cellSize-lineWidth);
+        return new Rectangle(point.x*(cellSize+lineWidth)+1, point.y*(cellSize+lineWidth)+1,
+                cellSize, cellSize);
     }
     public int getColumnsCount() {
         return columns;
