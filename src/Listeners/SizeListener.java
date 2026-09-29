@@ -1,11 +1,12 @@
 package Listeners;
 
 import Data.MapData;
+import WindowFolder.MapGrid;
 
 import java.awt.event.*;
 
 public class SizeListener implements ComponentListener {
-    MapData mapData;
+    MapGrid grid;
     public void componentHidden(ComponentEvent event) {
 
     }

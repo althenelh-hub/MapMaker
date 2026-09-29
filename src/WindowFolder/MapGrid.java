@@ -7,18 +7,21 @@ public class MapGrid {
     int rows;
     int cellSize;
     int lineWidth;
-    Point startingPoint;
-    public MapGrid(int columns, int rows, int cellSize, int lineWidth) {
+    Point startingPoint = new Point(0,0);
+    public MapGrid(int columns, int rows, int cellSize, int lineWidth, Point startPosition) {
         this.columns = columns;
         this.rows = rows;
         this.cellSize = cellSize;
         this.lineWidth = lineWidth;
+        startingPoint = startPosition;
     }
     public Point getCoordinate(Point point) {
         int borderedCell = cellSize+lineWidth;
-        int mapWidth = columns*borderedCell+lineWidth;
-        int mapHeight = rows*borderedCell+lineWidth;
-        if(point.x < mapWidth && point.y < mapHeight) { //later change for exception
+        int mapWidth = columns*borderedCell+lineWidth+startingPoint.x;
+        int mapHeight = rows*borderedCell+lineWidth+startingPoint.y;
+        if(point.x < mapWidth && point.y < mapHeight) {
+            point.x -= startingPoint.x;
+            point.y -= startingPoint.y; //later change for exception
             return new Point(point.x / borderedCell, point.y / borderedCell);
         }
         else {
@@ -33,6 +36,12 @@ public class MapGrid {
     public int getColumnsCount() {
         return columns;
     }
+    public int getWidth() {
+        return columns*(lineWidth+cellSize)+lineWidth;
+    }
+    public int getHeight() {
+        return rows*(lineWidth+cellSize)+lineWidth;
+    }
     public int getRowsCount() {
         return rows;
     }
@@ -40,4 +49,25 @@ public class MapGrid {
         return cellSize;
     }
     public int getLineWidth() {return lineWidth;}
+    public Point getStartingPoint() {return startingPoint;}
+    public void setColumns(int columns) {
+        this.columns = columns;
+    }
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+    public void setCellSize(int cellSize) {
+        this.cellSize = cellSize;
+    }
+    public void setLineWidth(int width) {
+        lineWidth = width;
+    }
+    public void setStartingPoint(Point p) {
+        startingPoint.x = p.x;
+        startingPoint.y = p.y;
+    }
+    public void reshape(Point size) {
+        startingPoint.x = (size.x-getWidth())/2;
+        startingPoint.y = (size.y-getHeight())/2;
+    }
 }

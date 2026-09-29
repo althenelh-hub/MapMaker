@@ -14,9 +14,9 @@ public class Window extends JFrame {
         setLayout(new BorderLayout());
         BufferedImage mapSave = new BufferedImage(300,300, BufferedImage.TYPE_INT_RGB);
         PaintImage imageInstruction = new PaintImage(mapSave);
-        QueuedInstructionPanel paintPanel = new QueuedInstructionPanel(imageInstruction);
+        MapGrid mapGrid = new MapGrid(10,10,20,1, new Point(0,0));
+        BufferCommunication paintPanel = new BufferCommunication(mapSave, new Point(mapGrid.getWidth(), mapGrid.getHeight()));
         BufferedQueuedPanelV2 bufferedPanel = new BufferedQueuedPanelV2(mapSave, paintPanel);
-        MapGrid mapGrid = new MapGrid(10,10,20,1);
         GridInstruction grid = new GridInstruction(mapGrid, Color.RED, Color.BLUE);
         ArrayList<PaintInstruction> instructions = new ArrayList<>();
         instructions.add(grid);

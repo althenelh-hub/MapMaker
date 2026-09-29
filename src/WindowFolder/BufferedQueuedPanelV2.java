@@ -5,11 +5,10 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 public class BufferedQueuedPanelV2 {
-    public QueuedInstructionPanel instructionPanel;
+    public BufferCommunication instructionPanel;
     BufferedImage image;
-    public BufferedQueuedPanelV2(BufferedImage image, QueuedInstructionPanel panel) {
+    public BufferedQueuedPanelV2(BufferedImage image, BufferCommunication panel) {
         instructionPanel = panel;
-        panel.setBaseInstruction(new PaintImage(image));
         this.image = image;
     }
     public void paintInstructions(ArrayList<PaintInstruction> instructions, Rectangle rect) {
@@ -20,7 +19,11 @@ public class BufferedQueuedPanelV2 {
         }
         instructionPanel.repaint(rect);
     }
+    public void changeCellNumber() {
+
+    }
     public void setMouseListener(MouseListener listener) {
         instructionPanel.addMouseListener(listener);
     }
+
 }

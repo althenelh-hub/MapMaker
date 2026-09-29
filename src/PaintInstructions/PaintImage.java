@@ -4,7 +4,6 @@ import java.awt.image.*;
 public class PaintImage implements PaintInstruction {
     BufferedImage image;
     Rectangle imageSize;
-    Rectangle target;
     public PaintImage (BufferedImage image) {
         this.image = image;
     }
@@ -14,5 +13,8 @@ public class PaintImage implements PaintInstruction {
     public void fulfill(Graphics g) {
         //g.drawImage(image, 0,0,0,0,0,0,0,0,null);
         g.drawImage(image, 0,0,null);
+    }
+    public void changePaint(Point p) {
+
     }
 }
