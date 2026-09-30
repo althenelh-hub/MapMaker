@@ -2,6 +2,7 @@ package Listeners;
 import Data.CellData;
 import PaintInstructions.*;
 import Terrain.GameName;
+import Utilities.Coordinate;
 import WindowFolder.*;
 import java.awt.event.*;
 import java.awt.*;

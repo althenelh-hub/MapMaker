@@ -1,5 +1,7 @@
 package WindowFolder;
 
+import Utilities.Coordinate;
+
 import java.awt.*;
 
 public class MapGrid {
@@ -19,18 +21,22 @@ public class MapGrid {
         int borderedCell = cellSize+lineWidth;
         int mapWidth = columns*borderedCell+lineWidth+startingPoint.x;
         int mapHeight = rows*borderedCell+lineWidth+startingPoint.y;
-        if(point.x < mapWidth && point.y < mapHeight) {
-            point.x -= startingPoint.x;
-            point.y -= startingPoint.y; //later change for exception
-            return new Point(point.x / borderedCell, point.y / borderedCell);
+        Point offset = new Point(point.x-startingPoint.x, point.y-startingPoint.y);
+        if(offset.x < mapWidth && offset.y < mapHeight) {
+            System.out.println("point x: " + offset.x);
+            System.out.println("point y: " + offset.y);
+            System.out.println("coordinate x: " + offset.x/borderedCell);
+            System.out.println("coordinate y: " + offset.y/borderedCell);
+            return new Point(offset.x / borderedCell, offset.y / borderedCell);
         }
         else {
             return null;
         }
     }
     public Rectangle getRectToFill(Point point) { //returns rectangle that needs to be filled in coordinate
-        System.out.println(point);
-        return new Rectangle(point.x*(cellSize+lineWidth)+1, point.y*(cellSize+lineWidth)+1,
+        System.out.println(point.x*(cellSize+lineWidth)+1+startingPoint.x);
+        return new Rectangle(point.x*(cellSize+lineWidth)+1+startingPoint.x,
+                point.y*(cellSize+lineWidth)+1+ startingPoint.y,
                 cellSize, cellSize);
     }
     public int getColumnsCount() {
@@ -66,8 +72,8 @@ public class MapGrid {
         startingPoint.x = p.x;
         startingPoint.y = p.y;
     }
-    public void reshape(Point size) {
-        startingPoint.x = (size.x-getWidth())/2;
-        startingPoint.y = (size.y-getHeight())/2;
+    public void reshape(Rectangle parent) {
+        startingPoint.x = (parent.width-getWidth())/2;
+        startingPoint.y = (parent.height-getHeight())/2;
     }
 }

@@ -17,6 +17,7 @@ public class BufferedQueuedPanelV2 {
         for(PaintInstruction instruction : instructions) {
             instruction.fulfill(g);
         }
+        g.dispose();
         instructionPanel.repaint(rect);
     }
     public void changeCellNumber() {

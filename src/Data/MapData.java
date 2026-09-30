@@ -2,6 +2,8 @@ package Data;
 import java.awt.*;
 import java.util.*;
 import Terrain.*;
+import Utilities.Coordinate;
+
 public class MapData {
     HashMap<Point, Unit> units = new HashMap<>();
     Terrain[][] terrainMap;

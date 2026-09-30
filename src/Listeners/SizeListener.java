@@ -3,10 +3,14 @@ package Listeners;
 import Data.MapData;
 import WindowFolder.MapGrid;
 
+import java.awt.*;
 import java.awt.event.*;
 
 public class SizeListener implements ComponentListener {
     MapGrid grid;
+    public SizeListener(MapGrid grid) {
+        this.grid = grid;
+    }
     public void componentHidden(ComponentEvent event) {
 
     }
@@ -17,6 +21,7 @@ public class SizeListener implements ComponentListener {
 
     }
     public void componentResized(ComponentEvent event) {
-
+        Rectangle parent = event.getComponent().getBounds();
+        grid.reshape(parent);
     }
 }
