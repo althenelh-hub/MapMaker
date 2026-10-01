@@ -1,7 +1,9 @@
 package Listeners;
 import Data.CellData;
+import Factories.Factory;
 import PaintInstructions.*;
 import Terrain.GameName;
+import Terrain.MapObject;
 import Utilities.Coordinate;
 import WindowFolder.*;
 import java.awt.event.*;
@@ -13,17 +15,29 @@ public class CoordinateListener implements MouseListener { //TilePainter
     Painter painter;
     MapGrid mapGrid;
     MapData mapData;
+    GameName[] mapObjects;
+    HashMap<GameName, Factory<?>> factories = new HashMap<>();
+    int mode = 0;
     public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid) {
         target.setMouseListener(this);
         this.mapGrid = mapGrid;
         mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
         painter = new Painter(target);
-        int lineWidth = mapGrid.getLineWidth();
-        int cellSize = mapGrid.getCellSize();
-        painter.manageAllInstructions (new Rectangle(lineWidth, lineWidth, cellSize, cellSize));
+        mapObjects = new GameName[2];
+        mapObjects[0] = GameName.FOREST;
+        mapObjects[1] = GameName.WARRIOR;
     }
     public void mouseClicked(MouseEvent e) {
-        paintTile(e.getPoint());
+        int button = e.getButton();
+            if(button == 1) {
+            paintTile(e.getPoint());
+        }
+        if(button == 3) {
+            System.out.println("Clicked");
+            mode++;
+            mode = mode%mapObjects.length;
+            painter.setCurrentForm(mapObjects[mode]);
+        }
 
     }
     public void mouseEntered(MouseEvent e) {
@@ -39,9 +53,13 @@ public class CoordinateListener implements MouseListener { //TilePainter
 
     }
     public void paintTile(Point p) {
+        System.out.println("Point data: " + p);
         Rectangle rect = mapGrid.getRectToFill(mapGrid.getCoordinate(p));
         Point cell = mapGrid.getCoordinate(p);
         painter.paintForm(mapData.getCellData(cell), rect);
+    }
+    public void updateCell() {
+
     }
     public void removeElement(Point p, GameName name) {
 

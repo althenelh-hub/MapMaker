@@ -17,11 +17,14 @@ public class Painter { //how do i now which PaintForm i use
         this.paintPanel = paintPanel;
         currentForm = new PaintTile();
         currentForm.setColor(Color.BLACK);
-        currentForm.setRect(new Rectangle(0,0,20,20));
+        forms.put(GameName.FOREST, currentForm);
+        currentForm = new PaintCircle();
+        currentForm.setColor(Color.BLUE);
+        forms.put(GameName.WARRIOR, currentForm);
+
     }
     public void paintForm(CellData cellData, Rectangle rect) {
-        ArrayList<PaintInstruction> instructions = new ArrayList<>();
-        currentForm.setRect(rect);
+        ArrayList<PaintInstructionV2> instructions = new ArrayList<>();
         instructions.add(currentForm);
         PaintForm instruction;
         for(GameName name : cellData.mapObjects) {
@@ -32,10 +35,7 @@ public class Painter { //how do i now which PaintForm i use
         }
         paintPanel.paintInstructions(instructions, rect);
     }
-    public void manageAllInstructions (Rectangle rect) {
-        for (PaintForm entry : forms.values()) {
-            entry.setRect(rect);
-        }
+    public void setCurrentForm(GameName name) {
+        currentForm = forms.get(name);
     }
-
 }

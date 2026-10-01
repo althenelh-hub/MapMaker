@@ -2,7 +2,6 @@ package Data;
 import java.awt.*;
 import java.util.*;
 import Terrain.*;
-import Utilities.Coordinate;
 
 public class MapData {
     HashMap<Point, Unit> units = new HashMap<>();
@@ -31,6 +30,12 @@ public class MapData {
         GameName[] result = new GameName[names.size()];
         data.mapObjects = names.toArray(result);
         return data;
+    }
+    public void putUnit(Point point, Unit unit) {
+        units.put(point, unit);
+    }
+    public void putTerrain(Point point, Terrain terrain) {
+        terrainMap[point.x][point.y] = terrain;
     }
     public Unit getUnit(Point coordinate) {
         return units.getOrDefault(coordinate, null);

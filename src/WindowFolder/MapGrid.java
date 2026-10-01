@@ -23,10 +23,6 @@ public class MapGrid {
         int mapHeight = rows*borderedCell+lineWidth+startingPoint.y;
         Point offset = new Point(point.x-startingPoint.x, point.y-startingPoint.y);
         if(offset.x < mapWidth && offset.y < mapHeight) {
-            System.out.println("point x: " + offset.x);
-            System.out.println("point y: " + offset.y);
-            System.out.println("coordinate x: " + offset.x/borderedCell);
-            System.out.println("coordinate y: " + offset.y/borderedCell);
             return new Point(offset.x / borderedCell, offset.y / borderedCell);
         }
         else {
@@ -34,9 +30,8 @@ public class MapGrid {
         }
     }
     public Rectangle getRectToFill(Point point) { //returns rectangle that needs to be filled in coordinate
-        System.out.println(point.x*(cellSize+lineWidth)+1+startingPoint.x);
-        return new Rectangle(point.x*(cellSize+lineWidth)+1+startingPoint.x,
-                point.y*(cellSize+lineWidth)+1+ startingPoint.y,
+        return new Rectangle(point.x*(cellSize+lineWidth)+1,
+                point.y*(cellSize+lineWidth)+1,
                 cellSize, cellSize);
     }
     public int getColumnsCount() {

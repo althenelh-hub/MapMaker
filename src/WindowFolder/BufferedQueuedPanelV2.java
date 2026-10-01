@@ -10,18 +10,21 @@ public class BufferedQueuedPanelV2 {
     public BufferedQueuedPanelV2(BufferedImage image, BufferCommunication panel) {
         instructionPanel = panel;
         this.image = image;
+
     }
-    public void paintInstructions(ArrayList<PaintInstruction> instructions, Rectangle rect) {
-        instructionPanel.put(instructions);
+    public void paintInstructions(ArrayList<PaintInstructionV2> instructions, Rectangle rect) {
+        instructionPanel.put(instructions, rect);
         Graphics g = image.createGraphics();
-        for(PaintInstruction instruction : instructions) {
-            instruction.fulfill(g);
+        for(PaintInstructionV2 instruction : instructions) {
+            instruction.fulfill(g, rect);
         }
         g.dispose();
-        instructionPanel.repaint(rect);
+        instructionPanel.updatePaint();
     }
-    public void changeCellNumber() {
-
+    public void paintInit(PaintInstructionV2 instruction, Rectangle rectangle) {
+        Graphics g = image.createGraphics();
+        instruction.fulfill(g, rectangle);
+        instructionPanel.repaint();
     }
     public void setMouseListener(MouseListener listener) {
         instructionPanel.addMouseListener(listener);

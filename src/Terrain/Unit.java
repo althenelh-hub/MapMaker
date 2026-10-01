@@ -1,4 +1,5 @@
 package Terrain;
 
-public class Unit extends MapObject{
+public class Unit extends MapObject {
+
 }
