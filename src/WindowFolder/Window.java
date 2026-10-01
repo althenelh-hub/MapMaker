@@ -27,22 +27,7 @@ public class Window extends JFrame {
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
         paintPanel.addComponentListener(new SizeListener(mapGrid));
         CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid);
-        JColorChooser colorChooser = new JColorChooser();
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
-        frame.add(colorChooser, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        frame.setSize(new Dimension(300,300));
-        frame.setVisible(true);
-        JButton button = new JButton();
-        button.addActionListener(new ActionListener() {
-            JColorChooser colorChooserV2 = colorChooser;
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(colorChooserV2.getColor());
-            }
-        });
-        frame.add(button, BorderLayout.EAST);
+        MOCreation creation = new MOCreation();
         System.out.println("window " + paintPanel.getBounds());
     }
 
