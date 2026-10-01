@@ -1,6 +1,5 @@
 package WindowFolder;
 
-import Utilities.Coordinate;
 
 import java.awt.*;
 

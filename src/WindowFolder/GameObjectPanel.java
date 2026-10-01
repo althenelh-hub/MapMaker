@@ -19,5 +19,12 @@ public class GameObjectPanel extends JTabbedPane {
         });
         panel.add(button);
         addTab("Units", panel);
+        JButton creator = new JButton();
+        creator.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                add(new CreationMenu());
+            }
+        });
     }
 }

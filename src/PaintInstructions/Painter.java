@@ -1,7 +1,6 @@
 package PaintInstructions;
 
 import Data.CellData;
-import Data.TileData;
 import WindowFolder.*;
 import Terrain.*;
 

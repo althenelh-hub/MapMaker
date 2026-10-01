@@ -4,7 +4,6 @@ import Factories.Factory;
 import PaintInstructions.*;
 import Terrain.GameName;
 import Terrain.MapObject;
-import Utilities.Coordinate;
 import WindowFolder.*;
 import java.awt.event.*;
 import java.awt.*;
