@@ -1,5 +1,8 @@
 package WindowFolder;
 import javax.swing.*;
+import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import PaintInstructions.*;
@@ -12,6 +15,7 @@ import java.util.regex.Pattern;
 
 public class MOCreation extends JDialog {
     JPanel preview;
+    PaintForm paintForm;
     MapObject mapObject;
     HashMap<String, Integer> fieldValues;
     public MOCreation() {
@@ -19,6 +23,8 @@ public class MOCreation extends JDialog {
         setSize(new Dimension(1000,800));
         setLayout(new BorderLayout());
         JPanel panel = new JPanel();
+        JLabel name = new JLabel("Name:");
+        JTextField field = new JTextField();
         MOManagePanel managePanel = new MOManagePanel();
         panel.add(managePanel);
         JButton button = new JButton();
@@ -35,14 +41,18 @@ public class MOCreation extends JDialog {
             }
         });
         add(finish, BorderLayout.EAST);
+        JColorChooser chooser = new JColorChooser();
+        chooser.getSelectionModel().addChangeListener(new ChooseColor());
+        //preview = ;
+        add(preview, BorderLayout.CENTER);
         setVisible(true);
     }
 }
-class ChooseColor implements ActionListener {
-    JDialog dialog;
-    Painter painter;
-    public void actionPerformed(ActionEvent e) {
-        dialog.dispose();
+class ChooseColor implements ChangeListener {
+    PaintForm form;
+    public void stateChanged(ChangeEvent e) {
+        Color color = ((ColorSelectionModel)e.getSource()).getSelectedColor();
+        form.setColor(color);
 
     }
 }
@@ -95,20 +105,38 @@ class CheckTF implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
         String text = ((JTextField)e.getSource()).getText();
+        InputChecker checker = new InputChecker();
+        if(checker.checkOnDigits(text)) {
+            characteristic.value = Integer.parseInt(text);
+        }
+        System.out.println("Value is set");
+    }
+
+}
+class InputChecker {
+    public boolean checkOnDigits(String text) {
         if (text.charAt(0) < 49 && text.length()>1 || text.charAt(0) > 58) {
             System.out.println("Wrong first");
-            return;
+            return false;
         }
         for(int i = 0;i < text.length();i++) {
             if(text.charAt(i) < 47 && text.charAt(i) > 58) {
                 System.out.println("Wrong format");
-                return;
+                return false;
             }
         }
-        System.out.println("Value is set");
-        characteristic.value = Integer.parseInt(text);
+        return true;
     }
-
+    public boolean checkPureLetters(String text) {
+        Pattern pattern = Pattern.compile("[^a-zA-Z]");
+        Matcher matcher = pattern.matcher(text);
+        if(!matcher.find()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 class TransportCharacteristicName implements ActionListener {
     Characteristic characteristic;
@@ -117,14 +145,12 @@ class TransportCharacteristicName implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
         String text = ((JTextField)e.getSource()).getText();
-        Pattern pattern = Pattern.compile("[^a-zA-Z]");
-        Matcher matcher = pattern.matcher(text);
-        if(!matcher.find()) {
+        InputChecker checker = new InputChecker();
+        if(checker.checkPureLetters(text)) {
             System.out.println(text);
             System.out.println("Name is set");
             characteristic.name = text;
         }
-
     }
 }
 class RemoveAction implements ActionListener {

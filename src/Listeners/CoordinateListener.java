@@ -2,7 +2,6 @@ package Listeners;
 import Data.CellData;
 import Factories.Factory;
 import PaintInstructions.*;
-import Terrain.GameName;
 import Terrain.MapObject;
 import WindowFolder.*;
 import java.awt.event.*;
@@ -14,17 +13,17 @@ public class CoordinateListener implements MouseListener { //TilePainter
     Painter painter;
     MapGrid mapGrid;
     MapData mapData;
-    GameName[] mapObjects;
-    HashMap<GameName, Factory<?>> factories = new HashMap<>();
+    String[] mapObjects;
+    HashMap<String, Factory<?>> factories = new HashMap<>();
     int mode = 0;
     public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid) {
         target.setMouseListener(this);
         this.mapGrid = mapGrid;
         mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
         painter = new Painter(target);
-        mapObjects = new GameName[2];
-        mapObjects[0] = GameName.FOREST;
-        mapObjects[1] = GameName.WARRIOR;
+        mapObjects = new String[2];
+        mapObjects[0] = "Forest";
+        mapObjects[1] = "Warrior";
     }
     public void mouseClicked(MouseEvent e) {
         int button = e.getButton();
@@ -60,7 +59,7 @@ public class CoordinateListener implements MouseListener { //TilePainter
     public void updateCell() {
 
     }
-    public void removeElement(Point p, GameName name) {
+    public void removeElement(Point p, String name) {
 
     }
 

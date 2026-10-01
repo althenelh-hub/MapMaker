@@ -20,14 +20,14 @@ public class MapData {
     }
     public CellData getCellData(Point p) {
         CellData data = new CellData();
-        ArrayList<GameName> names = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
         if(containsTerrain(p)) {
             names.add(terrainMap[p.x][p.y].name);
         }
         if(containsUnit(p)) {
             names.add(units.get(p).name);
         }
-        GameName[] result = new GameName[names.size()];
+        String[] result = new String[names.size()];
         data.mapObjects = names.toArray(result);
         return data;
     }
