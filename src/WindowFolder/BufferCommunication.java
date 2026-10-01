@@ -8,15 +8,15 @@ import javax.swing.*;
 import java.awt.*;
 public class BufferCommunication extends JPanel{
     ArrayList<PaintInstructionV2> instructions = new ArrayList<>();
-    PaintImageV2 image;
+    PaintInstructionV2 image;
     Rectangle paintArea;
     Rectangle currentArea;
-    public BufferCommunication(BufferedImage image, Point areaSize) {
+    public BufferCommunication(PaintInstructionV2 image, Point areaSize) {
         Rectangle size = getBounds();
         paintArea = new Rectangle(0, 0, areaSize.x, areaSize.y);
-        setStartingPoint();
+        //setStartingPoint();
         currentArea = new Rectangle(0,0,0,0);
-        this.image = new PaintImageV2(new Point(paintArea.width, paintArea.height), image);
+        this.image = image;
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

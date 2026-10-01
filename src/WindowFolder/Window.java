@@ -1,11 +1,8 @@
 package WindowFolder;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.*;
-import java.util.ArrayList;
-
+import Factories.ForestFactory;
 import Listeners.CoordinateListener;
 import Listeners.SizeListener;
 import PaintInstructions.*;
@@ -18,7 +15,8 @@ public class Window extends JFrame {
         MapGrid mapGrid = new MapGrid(10,10,20,1, new Point(0,0));
         setMinimumSize(new Dimension(mapGrid.getWidth() + 100,mapGrid.getHeight()+100));
         BufferedImage mapSave = new BufferedImage(300,300, BufferedImage.TYPE_INT_RGB);
-        BufferCommunication paintPanel = new BufferCommunication(mapSave, new Point(mapGrid.getWidth(),mapGrid.getHeight()));
+        PaintImageV2 imageInstruction = new PaintImageV2(new Point(mapGrid.getWidth(),mapGrid.getHeight()), mapSave);
+        BufferCommunication paintPanel = new BufferCommunication(imageInstruction, new Point(mapGrid.getWidth(),mapGrid.getHeight()));
         BufferedQueuedPanelV2 bufferedPanel = new BufferedQueuedPanelV2(mapSave, paintPanel);
         GridInstruction grid = new GridInstruction(mapGrid, Color.RED, Color.BLUE);
         paintPanel.setPreferredSize(new Dimension(300,300));
@@ -27,7 +25,8 @@ public class Window extends JFrame {
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
         paintPanel.addComponentListener(new SizeListener(mapGrid));
         CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid);
-        MOCreation creation = new MOCreation();
+        ForestFactory factory = new ForestFactory();
+        new MOCreation(factory);
         System.out.println("window " + paintPanel.getBounds());
     }
 
