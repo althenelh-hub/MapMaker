@@ -26,7 +26,8 @@ public class Window extends JFrame {
         paintPanel.addComponentListener(new SizeListener(mapGrid));
         CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid);
         ForestFactory factory = new ForestFactory();
-        new MOCreation(factory);
+        listener.addFactory("Forest", factory);
+        new MOCreation(factory, new PaintTile());
         System.out.println("window " + paintPanel.getBounds());
     }
 

@@ -25,6 +25,9 @@ public class CoordinateListener implements MouseListener { //TilePainter
         mapObjects[0] = "Forest";
         mapObjects[1] = "Warrior";
     }
+    public void addFactory(String name, Factory<?> factory) {
+        factories.put(name, factory);
+    }
     public void mouseClicked(MouseEvent e) {
         int button = e.getButton();
             if(button == 1) {

@@ -7,10 +7,9 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 
-import Factories.Factory;
+import Factories.FactoryManager;
 import Factories.ForestFactory;
 import PaintInstructions.*;
-import PaintInstructions.Painter;
 import Terrain.MapObject;
 import Terrain.Terrain;
 
@@ -19,7 +18,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MOCreation extends JDialog {
-    public MOCreation(ForestFactory factory) {
+    FactoryManager manager;
+    public MOCreation(ForestFactory factory, PaintForm paintForm) {
         //Dialog settings
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(new Dimension(1000,800));
@@ -53,15 +53,18 @@ public class MOCreation extends JDialog {
         //characteristics field and adder
         //Preview and color chooser
         JColorChooser chooser = new JColorChooser();
-        PaintForm paintForm = new PaintTile();
         JPanel preview = new PaintInstructionPanel(paintForm, new Point(100,100));
         chooser.getSelectionModel().addChangeListener(new ChooseColor(paintForm, preview));
         add(preview, BorderLayout.CENTER);
         add(chooser, BorderLayout.SOUTH);
+        JComboBox<String> comboBox = new JComboBox<>();
+        String string = comboBox.getItemAt(comboBox.getSelectedIndex());
         //Preview and color chooser
         setVisible(true);
     }
 }
+
+
 class FinishAction implements ActionListener{
     ForestFactory factory;
     Form form;
@@ -178,12 +181,7 @@ class InputChecker {
     public boolean checkPureLetters(String text) {
         Pattern pattern = Pattern.compile("[^a-zA-Z]");
         Matcher matcher = pattern.matcher(text);
-        if(!matcher.find()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return !matcher.find();
     }
 }
 class TransportCharacteristicName implements ActionListener {
