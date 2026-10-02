@@ -35,7 +35,9 @@ public class MapData {
         units.put(point, unit);
     }
     public void putTerrain(Point point, Terrain terrain) {
+        System.out.println("Inside MapData: " + terrain);
         terrainMap[point.x][point.y] = terrain;
+        System.out.println("Inside MapData: " + terrainMap[point.x][point.y]);
     }
     public Unit getUnit(Point coordinate) {
         return units.getOrDefault(coordinate, null);

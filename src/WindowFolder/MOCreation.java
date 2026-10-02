@@ -6,20 +6,18 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-
+import Data.*;
+import Factories.Factory;
+import Terrain.*;
 import Factories.FactoryManager;
-import Factories.ForestFactory;
 import PaintInstructions.*;
-import Terrain.MapObject;
-import Terrain.Terrain;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MOCreation extends JDialog {
-    FactoryManager manager;
-    public MOCreation(ForestFactory factory, PaintForm paintForm) {
+
+    public MOCreation(FactoryManager manager, PaintForm paintForm) {
         //Dialog settings
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(new Dimension(1000,800));
@@ -28,9 +26,10 @@ public class MOCreation extends JDialog {
         //Name field and finishAction
         JLabel name = new JLabel("Name:");
         JTextField field = new JTextField();
-        Form form = new Form();
-        FinishAction finishAction = new FinishAction(factory, form, "", this);
-        field.addActionListener(new TransportCharacteristicName(finishAction.name));
+        StringReceiver mObjectName = new StringReceiver();
+        Form form = new Form(mObjectName);
+        FinishAction finishAction = new FinishAction(manager, form,this);
+        field.addActionListener(new TransportCharacteristicName(mObjectName));
         JButton finish = new JButton();
         finish.addActionListener(finishAction);
         add(finish, BorderLayout.EAST);
@@ -46,7 +45,8 @@ public class MOCreation extends JDialog {
         MOManagePanel managePanel = new MOManagePanel();
         panel.add(managePanel);
         JButton button = new JButton();
-        button.addActionListener(new AddField(managePanel, form));
+        MObjectData data = new MObjectData(managePanel, form);
+        button.addActionListener(new AddField(data));
         panel.add(button);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         add(panel, BorderLayout.WEST);
@@ -63,24 +63,36 @@ public class MOCreation extends JDialog {
         setVisible(true);
     }
 }
-
-
-class FinishAction implements ActionListener{
-    ForestFactory factory;
+class changeMObject implements ChangeListener {
+    FactoryManager manager;
+    PaintInstructionPanel preview;
+    HashMap<String, PaintForm> forms;
+    ChooseColor chooseColor;
+    MObjectData data;
+    JColorChooser colorChooser;
+    public void stateChanged(ChangeEvent e) {
+        JComboBox<String> comboBox = (JComboBox<String>)e.getSource();
+        String name = comboBox.getItemAt(comboBox.getSelectedIndex());
+        manager.changeFactory(name);
+        preview.setInstruction(forms.get(name));
+        data.empty();
+        chooseColor.form = forms.get(name);
+        forms.get(name).setColor(colorChooser.getColor());
+    }
+}
+class FinishAction implements ActionListener {
+    FactoryManager manager;
     Form form;
-    StringReceiver name;
     Dialog dialog;
-    public FinishAction(ForestFactory factory, Form form, String string, Dialog dialog) {
-        this.factory = factory;
+    public FinishAction(FactoryManager manager, Form form, Dialog dialog) {
+        this.manager = manager;
         this.form = form;
         this.dialog = dialog;
-        name = new StringReceiver();
-        name.receiveString(string);
     }
     public void actionPerformed(ActionEvent e) {
-        Terrain terrain = new Terrain();
-        form.fillMapObject(terrain);
-        factory.create(name.text, terrain);
+        Factory<?> current = manager.getCurrent();
+        current.store(form);
+        current.change(form.getName());
         dialog.dispose();
 
     }
@@ -101,32 +113,45 @@ class ChooseColor implements ChangeListener {
     }
 }
 
-class StringReceiver {
-    String text;
-    public void receiveString(String text) {
-        this.text = text;
+class AddField implements ActionListener {
+    MObjectData data;
+    public AddField(MObjectData data) {
+        this.data = data;
+    }
+    public void actionPerformed(ActionEvent e) {
+        data.add();
+
     }
 }
-class AddField implements ActionListener {
+class MObjectData {
     MOManagePanel panel;
     Form form;
-    public AddField(MOManagePanel panel, Form form) {
+    public MObjectData(MOManagePanel panel, Form form) {
         this.panel = panel;
         this.form = form;
     }
-    public void actionPerformed(ActionEvent e) {
+    public void remove(int index) {
+        panel.removeField(index);
+        form.removeField(index);
+    }
+    public void add() {
         JTextField label = new JTextField();
         JTextField value = new JTextField();
         JButton button = new JButton();
-        button.addActionListener(new RemoveAction(panel, form));
-        MOField field = new MOField(label, value, button);
-        panel.addField(field);
         Characteristic characteristic = new Characteristic();
+        label.addActionListener(new TransportCharacteristicName(characteristic.getReceiver()));
         value.addActionListener(new CheckTF(characteristic));
-        label.addActionListener(new TransportCharacteristicName(characteristic.name));
+        MOField field = new MOField(label, value, button);
+        button.addActionListener(new RemoveAction(this));
+        panel.addField(field);
         form.addField(characteristic);
-        System.out.println(((JButton)e.getSource()).getParent());
-
+    }
+    public void empty() {
+        panel.emptyAll();
+        form.emptyForm();
+    }
+    public int getLength() {
+        return panel.getLength();
     }
 }
 class MOField {
@@ -200,17 +225,15 @@ class TransportCharacteristicName implements ActionListener {
     }
 }
 class RemoveAction implements ActionListener {
-    MOManagePanel panel;
     int index;
-    Form form;
-    public RemoveAction(MOManagePanel panel, Form form) {
-        this.panel = panel;
-        this.index = panel.getLength();
-        this.form = form;
+    MObjectData data;
+    public RemoveAction(MObjectData data) {
+        this.data = data;
+        this.index = data.getLength();
+
     }
     public void actionPerformed(ActionEvent e) {
-        panel.removeField(index);
-        form.removeField(index);
+        data.remove(index);
     }
 }
 class MOManagePanel extends JPanel {
@@ -218,6 +241,10 @@ class MOManagePanel extends JPanel {
     MOManagePanel() {
         fields = new ArrayList<>();
         setLayout(new GridLayout(0,3));
+    }
+    public void emptyAll() {
+        fields.clear();
+        removeAll();
     }
     public void removeField(int index) {
         if(index < fields.size()) {
@@ -242,37 +269,6 @@ class MOManagePanel extends JPanel {
     }
     public int getLength() {
         return fields.size();
-    }
-}
-class Form {
-    ArrayList<Characteristic> fields;
-    public Form() {
-        fields = new ArrayList<>();
-    }
-    public void fillMapObject(MapObject mObject) {
-        for(Characteristic c : fields) {
-            mObject.addValue(c.name.text, c.value);
-        }
-    }
-    public void addField(Characteristic characteristic) {
-        fields.add(characteristic);
-    }
-    public void removeField(int index) {
-        fields.remove(index);
-    }
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        for(Characteristic c : fields) {
-            builder.append(c).append("\n");
-        }
-        return builder.toString();
-    }
-}
-class Characteristic {
-    StringReceiver name;
-    int value;
-    public String toString() {
-        return "Name: " + name + "Value: " + value;
     }
 }
 

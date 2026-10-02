@@ -1,6 +1,7 @@
 package Listeners;
 import Data.CellData;
 import Factories.Factory;
+import Factories.FactoryManager;
 import PaintInstructions.*;
 import Terrain.MapObject;
 import WindowFolder.*;
@@ -14,19 +15,17 @@ public class CoordinateListener implements MouseListener { //TilePainter
     MapGrid mapGrid;
     MapData mapData;
     String[] mapObjects;
-    HashMap<String, Factory<?>> factories = new HashMap<>();
+    FactoryManager manager;
     int mode = 0;
-    public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid) {
+    public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid, FactoryManager manager) {
         target.setMouseListener(this);
         this.mapGrid = mapGrid;
         mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
         painter = new Painter(target);
+        this.manager = manager;
         mapObjects = new String[2];
         mapObjects[0] = "Forest";
         mapObjects[1] = "Warrior";
-    }
-    public void addFactory(String name, Factory<?> factory) {
-        factories.put(name, factory);
     }
     public void mouseClicked(MouseEvent e) {
         int button = e.getButton();
@@ -57,7 +56,10 @@ public class CoordinateListener implements MouseListener { //TilePainter
         System.out.println("Point data: " + p);
         Rectangle rect = mapGrid.getRectToFill(mapGrid.getCoordinate(p));
         Point cell = mapGrid.getCoordinate(p);
+        Factory<?> currentFactory = manager.getCurrent();
         painter.paintForm(mapData.getCellData(cell), rect);
+        currentFactory.put(cell, mapData);
+        System.out.println("Show cellData: " + mapData.getCellData(cell));
     }
     public void updateCell() {
 

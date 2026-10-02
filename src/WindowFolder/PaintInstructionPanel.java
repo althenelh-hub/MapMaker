@@ -23,6 +23,9 @@ public class PaintInstructionPanel extends JPanel {
         paintArea.x = (rectangle.width-paintArea.width)/2;
         paintArea.y = (rectangle.height-paintArea.height)/2;
     }
+    public void setInstruction(PaintInstructionV2 instruction) {
+        this.instruction = instruction;
+    }
     public Point getStartingPoint() {
         return new Point(paintArea.x, paintArea.y);
     }

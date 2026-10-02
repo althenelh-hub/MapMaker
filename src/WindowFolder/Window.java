@@ -2,6 +2,8 @@ package WindowFolder;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
+
+import Factories.FactoryManager;
 import Factories.ForestFactory;
 import Listeners.CoordinateListener;
 import Listeners.SizeListener;
@@ -24,10 +26,12 @@ public class Window extends JFrame {
         paintPanel.setStartingPoint();
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
         paintPanel.addComponentListener(new SizeListener(mapGrid));
-        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid);
         ForestFactory factory = new ForestFactory();
-        listener.addFactory("Forest", factory);
-        new MOCreation(factory, new PaintTile());
+        FactoryManager manager = new FactoryManager();
+        manager.addFactory("Forest", new ForestFactory());
+        manager.changeFactory("Forest");
+        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, manager);
+        new MOCreation(manager, new PaintTile());
         System.out.println("window " + paintPanel.getBounds());
     }
 

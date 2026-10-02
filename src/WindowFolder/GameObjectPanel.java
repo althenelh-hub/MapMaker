@@ -35,7 +35,7 @@ class MObjectContainer extends JPanel {
     public void showButtons(CoordinateListener listener) {
         for(String s : names) {
             JButton button = new JButton(s);
-            button.addActionListener(new MObjectSetter(listener, s));
+            //button.addActionListener(new MObjectSetter(listener, s));
             add(button);
         }
     }
