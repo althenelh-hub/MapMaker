@@ -1,5 +1,6 @@
 package Factories;
 
+import java.util.Set;
 import java.util.HashMap;
 
 public class FactoryManager {
@@ -16,6 +17,12 @@ public class FactoryManager {
     }
     public void changeCreation() {
 
+    }
+    public String[] getFactoriesName() {
+        Set<String> set = factories.keySet();
+        String[] result = new String[set.size()];
+        set.toArray(result);
+        return result;
     }
     public Factory<?> getCurrent() {
         return currentFactory;

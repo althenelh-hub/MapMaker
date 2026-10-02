@@ -26,7 +26,6 @@ public class Window extends JFrame {
         paintPanel.setStartingPoint();
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
         paintPanel.addComponentListener(new SizeListener(mapGrid));
-        ForestFactory factory = new ForestFactory();
         FactoryManager manager = new FactoryManager();
         manager.addFactory("Forest", new ForestFactory());
         manager.changeFactory("Forest");

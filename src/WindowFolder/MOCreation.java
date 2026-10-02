@@ -53,31 +53,66 @@ public class MOCreation extends JDialog {
         //characteristics field and adder
         //Preview and color chooser
         JColorChooser chooser = new JColorChooser();
-        JPanel preview = new PaintInstructionPanel(paintForm, new Point(100,100));
-        chooser.getSelectionModel().addChangeListener(new ChooseColor(paintForm, preview));
-        add(preview, BorderLayout.CENTER);
+        JPanel previewAndMode = new JPanel();
+        PaintInstructionPanel preview = new PaintInstructionPanel(paintForm, new Point(100,100));
+        ChooseColor chooseColor = new ChooseColor(paintForm, preview);
+        MObjectBox box = new MObjectBox(manager, preview, chooseColor, data, chooser);
+        previewAndMode.setLayout(new BoxLayout(previewAndMode, BoxLayout.Y_AXIS));
+        previewAndMode.add(box);
+        previewAndMode.add(preview);
+        chooser.getSelectionModel().addChangeListener(chooseColor);
+        add(previewAndMode, BorderLayout.CENTER);
         add(chooser, BorderLayout.SOUTH);
-        JComboBox<String> comboBox = new JComboBox<>();
-        String string = comboBox.getItemAt(comboBox.getSelectedIndex());
         //Preview and color chooser
         setVisible(true);
     }
 }
-class changeMObject implements ChangeListener {
+class MObjectBox extends JComboBox<String> {
+    public MObjectBox(FactoryManager manager, PaintInstructionPanel preview, ChooseColor chooseColor,
+                      MObjectData data, JColorChooser colorChooser) {
+        ChangeMObject changeMObject = new ChangeMObject(manager, preview, chooseColor, data, colorChooser);
+        changeMObject.addForm(new PaintTile(), "Forest");
+        changeMObject.addForm(new PaintCircle(), "Unit");
+        addItemListener(changeMObject);
+
+        setItems(manager);
+    }
+    public void setItems(FactoryManager manager) {
+        String[] names = manager.getFactoriesName();
+        for(String s : names) {
+            addItem(s);
+        }
+    }
+}
+class ChangeMObject implements ItemListener {
     FactoryManager manager;
     PaintInstructionPanel preview;
     HashMap<String, PaintForm> forms;
     ChooseColor chooseColor;
     MObjectData data;
     JColorChooser colorChooser;
-    public void stateChanged(ChangeEvent e) {
-        JComboBox<String> comboBox = (JComboBox<String>)e.getSource();
-        String name = comboBox.getItemAt(comboBox.getSelectedIndex());
-        manager.changeFactory(name);
-        preview.setInstruction(forms.get(name));
-        data.empty();
-        chooseColor.form = forms.get(name);
-        forms.get(name).setColor(colorChooser.getColor());
+    public ChangeMObject(FactoryManager manager, PaintInstructionPanel panel,
+                         ChooseColor chooseColor, MObjectData data, JColorChooser colorChooser) {
+        this.manager = manager;
+        preview = panel;
+        this.chooseColor = chooseColor;
+        this.data = data;
+        forms = new HashMap<>();
+        this.colorChooser = colorChooser;
+    }
+    public void addForm(PaintForm form, String name) {
+        forms.put(name, form);
+    }
+    public void itemStateChanged(ItemEvent e) {
+        if(e.getStateChange() == ItemEvent.SELECTED) {
+            String name = (String)e.getItem();
+            manager.changeFactory(name);
+            preview.setInstruction(forms.get(name));
+            data.empty();
+            chooseColor.form = forms.get(name);
+            forms.get(name).setColor(colorChooser.getColor());
+        }
+
     }
 }
 class FinishAction implements ActionListener {
