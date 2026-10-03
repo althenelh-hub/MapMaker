@@ -4,7 +4,6 @@ public abstract class PaintForm extends LayeredInstruction {
     Color color;
     public PaintForm() {
         color = Color.BLACK;
-
     }
     public void fulfill(Graphics g, Rectangle rectangle) {
         g.setColor(color);

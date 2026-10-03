@@ -29,17 +29,18 @@ public class Window extends JFrame {
         paintPanel.setStartingPoint();
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
         FactoryFormCommunication communication = new FactoryFormCommunication();
-        communication.addFactory("Forest", new ForestFactory("Forest"), new PaintTile());
-        communication.addFactory("Unit", new UnitFactory("Unit"), new PaintCircle());
+        communication.addFactory("Forest", new ForestFactory("Forest"), new PaintTile(), new PaintTileFactory());
+        communication.addFactory("Unit", new UnitFactory("Unit"), new PaintCircle(), new PaintCircleFactory());
         paintPanel.addComponentListener(new SizeListener(mapGrid));
         FactoryManager factoryManager = communication.getFactoryManager();
         FormManager formManager = communication.getFormManager();
         factoryManager.changeFactory("Forest");
         Painter painter = new Painter(bufferedPanel);
         CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager.getFactorySwitch(), painter);
-        GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter);
+        DialogManager dialogManager = new DialogManager(communication.getFormFactoryManager());
+        GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter, dialogManager, formManager);
         add(gameObjectPanel, BorderLayout.WEST);
-        new MOCreation(factoryManager, formManager, painter, gameObjectPanel);
+        //new MOCreation(factoryManager, formManager, painter, gameObjectPanel);
         System.out.println("window " + paintPanel.getBounds());
     }
 

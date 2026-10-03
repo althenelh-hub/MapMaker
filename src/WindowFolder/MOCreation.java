@@ -18,7 +18,8 @@ import java.util.regex.Pattern;
 
 public class MOCreation extends JDialog {
 
-    public MOCreation(FactoryManager manager, FormManager formManager,Painter painter, GameObjectPanel pane) {
+    public MOCreation(FactoryManager manager, FormManager formManager,Painter painter, GameObjectPanel pane,
+                      FormFactoryManager formFactoryManager) {
         //Dialog settings
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(new Dimension(1000,800));
@@ -29,11 +30,7 @@ public class MOCreation extends JDialog {
         JTextField field = new JTextField();
         StringReceiver mObjectName = new StringReceiver();
         Form form = new Form(mObjectName);
-        FinishAction finishAction = new FinishAction(manager, form,this, painter, formManager, pane);
         field.addActionListener(new TransportCharacteristicName(mObjectName));
-        JButton finish = new JButton();
-        finish.addActionListener(finishAction);
-        add(finish, BorderLayout.EAST);
         JPanel namePanel = new JPanel();
         namePanel.add(name);
         namePanel.add(field);
@@ -58,8 +55,13 @@ public class MOCreation extends JDialog {
         PaintInstructionPanel preview = new PaintInstructionPanel(formManager.getForm("Forest"), new Point(100,100));
         ChooseColor chooseColor = new ChooseColor(formManager.getForm("Forest"), preview);
         MObjectBox box = new MObjectBox(manager, preview, chooseColor, data, formManager, chooser);
+        FinishAction finishAction = new FinishAction(manager, form,this, formFactoryManager,painter, formManager, pane, box.getHolder());
+        JButton finish = new JButton();
+        finish.addActionListener(finishAction);
+        add(finish, BorderLayout.EAST);
         previewAndMode.setLayout(new BoxLayout(previewAndMode, BoxLayout.Y_AXIS));
         previewAndMode.add(box);
+
         previewAndMode.add(preview);
         chooser.getSelectionModel().addChangeListener(chooseColor);
         add(previewAndMode, BorderLayout.CENTER);
@@ -68,7 +70,10 @@ public class MOCreation extends JDialog {
         setVisible(true);
     }
 }
-class MObjectBox extends JComboBox<String> {
+interface Holder<T> {
+    T getObject();
+}
+class MObjectBox extends JComboBox<String> implements Holder<String>{
     public MObjectBox(FactoryManager manager, PaintInstructionPanel preview, ChooseColor chooseColor,
                       MObjectData data, FormManager formManager,JColorChooser colorChooser) {
         ChangeMObject changeMObject = new ChangeMObject(manager, preview, chooseColor, data, formManager, colorChooser);
@@ -80,6 +85,12 @@ class MObjectBox extends JComboBox<String> {
         for(String s : names) {
             addItem(s);
         }
+    }
+    public String getObject() {
+        return getItemAt(getSelectedIndex());
+    }
+    public Holder<String> getHolder() {
+        return this;
     }
 }
 class ChangeMObject implements ItemListener {
@@ -114,27 +125,34 @@ class ChangeMObject implements ItemListener {
 }
 class FinishAction implements ActionListener {
     FactoryManager manager;
+    Holder<String> holder;
     Form form;
     Dialog dialog;
     Painter painter;
     FormManager formManager;
     GameObjectPanel panel;
-    public FinishAction(FactoryManager manager, Form form, Dialog dialog,
-                        Painter painter, FormManager formManager, GameObjectPanel panel) {
+    FormFactoryManager formFactoryManager;
+    public FinishAction(FactoryManager manager, Form form, Dialog dialog,FormFactoryManager formFactoryManager,
+                        Painter painter, FormManager formManager, GameObjectPanel panel, Holder<String> holder) {
         this.manager = manager;
         this.form = form;
         this.dialog = dialog;
         this.painter = painter;
+        this.formFactoryManager = formFactoryManager;
         this.formManager = formManager;
         this.panel = panel;
+        this.holder = holder;
     }
     public void actionPerformed(ActionEvent e) {
-        Factory<?> current = manager.getCurrent();
+        Factory<?> current = manager.getFactory(holder.getObject());
         current.store(form);
         current.change(form.getName());
-        painter.addForm(form.getName(), formManager.getForm(current.getName()));
+        PaintFormFactory<?> paintFormFactory = formFactoryManager.getFactory(holder.getObject());
+        painter.addForm(form.getName(), );
+        panel.updateButtons(manager, formManager,painter);
+        System.out.println(current.getName());
         dialog.dispose();
-        panel.updateButtons(current, painter);
+
     }
 }
 class ChooseColor implements ChangeListener {

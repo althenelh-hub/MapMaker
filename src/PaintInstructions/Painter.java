@@ -21,6 +21,8 @@ public class Painter { //how do I now which PaintForm I use
     public void paintForm(CellData cellData, Rectangle rect) {
         ArrayList<PaintInstructionV2> instructions = new ArrayList<>();
         instructions.add(currentForm);
+        System.out.println("Painter: " + currentForm.color);
+        System.out.println(forms);
         PaintForm instruction;
         for(String name : cellData.mapObjects) {
             instruction = forms.get(name);
@@ -32,5 +34,7 @@ public class Painter { //how do I now which PaintForm I use
     }
     public void setCurrentForm(String name) {
         currentForm = forms.get(name);
+        System.out.println("Set color: " + currentForm.equals(forms.get(name)));
+
     }
 }
