@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import Data.*;
 import Factories.Factory;
+import PaintInstructions.Painter;
 import Terrain.*;
 import Factories.FactoryManager;
 import PaintInstructions.*;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class MOCreation extends JDialog {
 
-    public MOCreation(FactoryManager manager, PaintForm paintForm) {
+    public MOCreation(FactoryManager manager, FormManager formManager,Painter painter, GameObjectPanel pane) {
         //Dialog settings
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(new Dimension(1000,800));
@@ -28,7 +29,7 @@ public class MOCreation extends JDialog {
         JTextField field = new JTextField();
         StringReceiver mObjectName = new StringReceiver();
         Form form = new Form(mObjectName);
-        FinishAction finishAction = new FinishAction(manager, form,this);
+        FinishAction finishAction = new FinishAction(manager, form,this, painter, formManager, pane);
         field.addActionListener(new TransportCharacteristicName(mObjectName));
         JButton finish = new JButton();
         finish.addActionListener(finishAction);
@@ -54,9 +55,9 @@ public class MOCreation extends JDialog {
         //Preview and color chooser
         JColorChooser chooser = new JColorChooser();
         JPanel previewAndMode = new JPanel();
-        PaintInstructionPanel preview = new PaintInstructionPanel(paintForm, new Point(100,100));
-        ChooseColor chooseColor = new ChooseColor(paintForm, preview);
-        MObjectBox box = new MObjectBox(manager, preview, chooseColor, data, chooser);
+        PaintInstructionPanel preview = new PaintInstructionPanel(formManager.getForm("Forest"), new Point(100,100));
+        ChooseColor chooseColor = new ChooseColor(formManager.getForm("Forest"), preview);
+        MObjectBox box = new MObjectBox(manager, preview, chooseColor, data, formManager, chooser);
         previewAndMode.setLayout(new BoxLayout(previewAndMode, BoxLayout.Y_AXIS));
         previewAndMode.add(box);
         previewAndMode.add(preview);
@@ -69,12 +70,9 @@ public class MOCreation extends JDialog {
 }
 class MObjectBox extends JComboBox<String> {
     public MObjectBox(FactoryManager manager, PaintInstructionPanel preview, ChooseColor chooseColor,
-                      MObjectData data, JColorChooser colorChooser) {
-        ChangeMObject changeMObject = new ChangeMObject(manager, preview, chooseColor, data, colorChooser);
-        changeMObject.addForm(new PaintTile(), "Forest");
-        changeMObject.addForm(new PaintCircle(), "Unit");
+                      MObjectData data, FormManager formManager,JColorChooser colorChooser) {
+        ChangeMObject changeMObject = new ChangeMObject(manager, preview, chooseColor, data, formManager, colorChooser);
         addItemListener(changeMObject);
-
         setItems(manager);
     }
     public void setItems(FactoryManager manager) {
@@ -85,32 +83,31 @@ class MObjectBox extends JComboBox<String> {
     }
 }
 class ChangeMObject implements ItemListener {
-    FactoryManager manager;
+    FactoryManager factoryManager;
     PaintInstructionPanel preview;
-    HashMap<String, PaintForm> forms;
+    FormManager formManager;
     ChooseColor chooseColor;
     MObjectData data;
     JColorChooser colorChooser;
     public ChangeMObject(FactoryManager manager, PaintInstructionPanel panel,
-                         ChooseColor chooseColor, MObjectData data, JColorChooser colorChooser) {
-        this.manager = manager;
+                         ChooseColor chooseColor, MObjectData data, FormManager formManager, JColorChooser colorChooser) {
+        this.factoryManager = manager;
         preview = panel;
         this.chooseColor = chooseColor;
         this.data = data;
-        forms = new HashMap<>();
+        this.formManager = formManager;
         this.colorChooser = colorChooser;
-    }
-    public void addForm(PaintForm form, String name) {
-        forms.put(name, form);
     }
     public void itemStateChanged(ItemEvent e) {
         if(e.getStateChange() == ItemEvent.SELECTED) {
             String name = (String)e.getItem();
-            manager.changeFactory(name);
-            preview.setInstruction(forms.get(name));
+            factoryManager.changeFactory(name);
+            PaintForm form = formManager.getForm(name);
+            preview.setInstruction(form);
             data.empty();
-            chooseColor.form = forms.get(name);
-            forms.get(name).setColor(colorChooser.getColor());
+            chooseColor.form = form;
+            form.setColor(colorChooser.getColor());
+            preview.repaint();
         }
 
     }
@@ -119,17 +116,25 @@ class FinishAction implements ActionListener {
     FactoryManager manager;
     Form form;
     Dialog dialog;
-    public FinishAction(FactoryManager manager, Form form, Dialog dialog) {
+    Painter painter;
+    FormManager formManager;
+    GameObjectPanel panel;
+    public FinishAction(FactoryManager manager, Form form, Dialog dialog,
+                        Painter painter, FormManager formManager, GameObjectPanel panel) {
         this.manager = manager;
         this.form = form;
         this.dialog = dialog;
+        this.painter = painter;
+        this.formManager = formManager;
+        this.panel = panel;
     }
     public void actionPerformed(ActionEvent e) {
         Factory<?> current = manager.getCurrent();
         current.store(form);
         current.change(form.getName());
+        painter.addForm(form.getName(), formManager.getForm(current.getName()));
         dialog.dispose();
-
+        panel.updateButtons(current, painter);
     }
 }
 class ChooseColor implements ChangeListener {

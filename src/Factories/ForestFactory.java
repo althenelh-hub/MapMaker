@@ -6,8 +6,8 @@ import Terrain.Terrain;
 import java.awt.*;
 
 public class ForestFactory extends Factory<Terrain>{
-    public ForestFactory() {
-
+    public ForestFactory(String name) {
+        super(name);
     }
     public Terrain create(Form form) {
         Terrain terrain = new Terrain();
@@ -18,6 +18,9 @@ public class ForestFactory extends Factory<Terrain>{
     public void put(Point point, MapData data) {
         data.putTerrain(point, currentMapObject);
         System.out.println("Inside factory: " + data.getCellData(point));
+    }
+    public String toString() {
+        return "Forest";
     }
     public boolean check(Point point, MapData mapData) {
         return mapData.containsTerrain(point);

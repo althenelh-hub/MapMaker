@@ -5,9 +5,12 @@ import java.awt.image.*;
 
 import Factories.FactoryManager;
 import Factories.ForestFactory;
+import Factories.UnitFactory;
 import Listeners.CoordinateListener;
 import Listeners.SizeListener;
 import PaintInstructions.*;
+import PaintInstructions.Painter;
+
 public class Window extends JFrame {
     public Window() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -25,12 +28,18 @@ public class Window extends JFrame {
         add(paintPanel, BorderLayout.CENTER);
         paintPanel.setStartingPoint();
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
+        FactoryFormCommunication communication = new FactoryFormCommunication();
+        communication.addFactory("Forest", new ForestFactory("Forest"), new PaintTile());
+        communication.addFactory("Unit", new UnitFactory("Unit"), new PaintCircle());
         paintPanel.addComponentListener(new SizeListener(mapGrid));
-        FactoryManager manager = new FactoryManager();
-        manager.addFactory("Forest", new ForestFactory());
-        manager.changeFactory("Forest");
-        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, manager);
-        new MOCreation(manager, new PaintTile());
+        FactoryManager factoryManager = communication.getFactoryManager();
+        FormManager formManager = communication.getFormManager();
+        factoryManager.changeFactory("Forest");
+        Painter painter = new Painter(bufferedPanel);
+        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager.getFactorySwitch(), painter);
+        GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter);
+        add(gameObjectPanel, BorderLayout.WEST);
+        new MOCreation(factoryManager, formManager, painter, gameObjectPanel);
         System.out.println("window " + paintPanel.getBounds());
     }
 

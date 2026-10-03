@@ -2,6 +2,7 @@ package Listeners;
 import Data.CellData;
 import Factories.Factory;
 import Factories.FactoryManager;
+import Factories.FactorySwitch;
 import PaintInstructions.*;
 import Terrain.MapObject;
 import WindowFolder.*;
@@ -14,30 +15,18 @@ public class CoordinateListener implements MouseListener { //TilePainter
     Painter painter;
     MapGrid mapGrid;
     MapData mapData;
-    String[] mapObjects;
-    FactoryManager manager;
+    FactorySwitch factorySwitch;
     int mode = 0;
-    public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid, FactoryManager manager) {
+    public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid, FactorySwitch manager, Painter painter) {
         target.setMouseListener(this);
         this.mapGrid = mapGrid;
         mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
-        painter = new Painter(target);
-        this.manager = manager;
-        mapObjects = new String[2];
-        mapObjects[0] = "Forest";
-        mapObjects[1] = "Warrior";
+        this.painter = painter;
+        this.factorySwitch = manager;
     }
     public void mouseClicked(MouseEvent e) {
         int button = e.getButton();
-            if(button == 1) {
-            paintTile(e.getPoint());
-        }
-        if(button == 3) {
-            System.out.println("Clicked");
-            mode++;
-            mode = mode%mapObjects.length;
-            painter.setCurrentForm(mapObjects[mode]);
-        }
+        paintTile(e.getPoint());
 
     }
     public void mouseEntered(MouseEvent e) {
@@ -56,9 +45,8 @@ public class CoordinateListener implements MouseListener { //TilePainter
         System.out.println("Point data: " + p);
         Rectangle rect = mapGrid.getRectToFill(mapGrid.getCoordinate(p));
         Point cell = mapGrid.getCoordinate(p);
-        Factory<?> currentFactory = manager.getCurrent();
         painter.paintForm(mapData.getCellData(cell), rect);
-        currentFactory.put(cell, mapData);
+        factorySwitch.put(cell, mapData);
         System.out.println("Show cellData: " + mapData.getCellData(cell));
     }
     public void updateCell() {
