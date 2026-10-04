@@ -2,7 +2,8 @@ package PaintInstructions;
 import java.awt.*;
 public abstract class PaintForm extends LayeredInstruction {
     Color color;
-    public PaintForm() {
+    public PaintForm(int layer) {
+        super(layer);
         color = Color.BLACK;
     }
     public void fulfill(Graphics g, Rectangle rectangle) {

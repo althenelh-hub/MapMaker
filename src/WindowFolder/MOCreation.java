@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class MOCreation extends JDialog {
 
-    public MOCreation(FactoryManager manager, FormManager formManager,Painter painter, GameObjectPanel pane,
+    public MOCreation(FactoryManager manager,Painter painter, GameObjectPanel pane,
                       FormFactoryManager formFactoryManager) {
         //Dialog settings
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -52,10 +52,11 @@ public class MOCreation extends JDialog {
         //Preview and color chooser
         JColorChooser chooser = new JColorChooser();
         JPanel previewAndMode = new JPanel();
+        FormManager formManager = formFactoryManager.createFormManager();
         PaintInstructionPanel preview = new PaintInstructionPanel(formManager.getForm("Forest"), new Point(100,100));
         ChooseColor chooseColor = new ChooseColor(formManager.getForm("Forest"), preview);
         MObjectBox box = new MObjectBox(manager, preview, chooseColor, data, formManager, chooser);
-        FinishAction finishAction = new FinishAction(manager, form,this, formFactoryManager,painter, formManager, pane, box.getHolder());
+        FinishAction finishAction = new FinishAction(manager, form,this,painter, formManager, pane, box.getHolder());
         JButton finish = new JButton();
         finish.addActionListener(finishAction);
         add(finish, BorderLayout.EAST);
@@ -76,7 +77,7 @@ interface Holder<T> {
 class MObjectBox extends JComboBox<String> implements Holder<String>{
     public MObjectBox(FactoryManager manager, PaintInstructionPanel preview, ChooseColor chooseColor,
                       MObjectData data, FormManager formManager,JColorChooser colorChooser) {
-        ChangeMObject changeMObject = new ChangeMObject(manager, preview, chooseColor, data, formManager, colorChooser);
+        ChangeMObject changeMObject = new ChangeMObject(preview, chooseColor, data, formManager, colorChooser);
         addItemListener(changeMObject);
         setItems(manager);
     }
@@ -85,6 +86,8 @@ class MObjectBox extends JComboBox<String> implements Holder<String>{
         for(String s : names) {
             addItem(s);
         }
+        System.out.println("Current factory" + manager.getCurrent().getName());
+        setSelectedItem(manager.getCurrent().getName());
     }
     public String getObject() {
         return getItemAt(getSelectedIndex());
@@ -94,15 +97,13 @@ class MObjectBox extends JComboBox<String> implements Holder<String>{
     }
 }
 class ChangeMObject implements ItemListener {
-    FactoryManager factoryManager;
     PaintInstructionPanel preview;
     FormManager formManager;
     ChooseColor chooseColor;
     MObjectData data;
     JColorChooser colorChooser;
-    public ChangeMObject(FactoryManager manager, PaintInstructionPanel panel,
+    public ChangeMObject(PaintInstructionPanel panel,
                          ChooseColor chooseColor, MObjectData data, FormManager formManager, JColorChooser colorChooser) {
-        this.factoryManager = manager;
         preview = panel;
         this.chooseColor = chooseColor;
         this.data = data;
@@ -112,7 +113,6 @@ class ChangeMObject implements ItemListener {
     public void itemStateChanged(ItemEvent e) {
         if(e.getStateChange() == ItemEvent.SELECTED) {
             String name = (String)e.getItem();
-            factoryManager.changeFactory(name);
             PaintForm form = formManager.getForm(name);
             preview.setInstruction(form);
             data.empty();
@@ -131,14 +131,12 @@ class FinishAction implements ActionListener {
     Painter painter;
     FormManager formManager;
     GameObjectPanel panel;
-    FormFactoryManager formFactoryManager;
-    public FinishAction(FactoryManager manager, Form form, Dialog dialog,FormFactoryManager formFactoryManager,
+    public FinishAction(FactoryManager manager, Form form, Dialog dialog,
                         Painter painter, FormManager formManager, GameObjectPanel panel, Holder<String> holder) {
         this.manager = manager;
         this.form = form;
         this.dialog = dialog;
         this.painter = painter;
-        this.formFactoryManager = formFactoryManager;
         this.formManager = formManager;
         this.panel = panel;
         this.holder = holder;
@@ -147,9 +145,8 @@ class FinishAction implements ActionListener {
         Factory<?> current = manager.getFactory(holder.getObject());
         current.store(form);
         current.change(form.getName());
-        PaintFormFactory<?> paintFormFactory = formFactoryManager.getFactory(holder.getObject());
-        painter.addForm(form.getName(), );
-        panel.updateButtons(manager, formManager,painter);
+        painter.addForm(form.getName(), formManager.getForm(current.getName()));
+        panel.updateButtons(manager, painter);
         System.out.println(current.getName());
         dialog.dispose();
 

@@ -9,9 +9,7 @@ public class FormManager {
     public PaintForm getForm(String name) {
         return forms.get(name);
     }
-    public FormManager() {
 
-    }
-    
+
 
 }

@@ -11,7 +11,6 @@ import java.util.HashMap;
 
 public class FactoryFormCommunication {
     FactoryFiller factoryFiller;
-    FormFiller formFiller;
     FormFactoryFiller formFactoryFiller;
     class FormFactoryFiller extends FormFactoryManager implements Filler<PaintFormFactory<?>> {
         @Override
@@ -26,27 +25,20 @@ public class FactoryFormCommunication {
             factories.put(name, factory);
         }
     }
-    class FormFiller extends FormManager implements Filler<PaintForm> {
-        public void add(String name, PaintForm form) {
-            forms.put(name, form);
-        }
-    }
+
     public FormFactoryManager getFormFactoryManager() {
         return formFactoryFiller;
     }
     public FactoryManager getFactoryManager() {
         return factoryFiller;
     }
-    public FormManager getFormManager() {
-        return formFiller;
-    }
+
     public FactoryFormCommunication() {
         factoryFiller = new FactoryFiller();
-        formFiller = new FormFiller();
+        formFactoryFiller = new FormFactoryFiller();
     }
-    public void addFactory(String name, Factory<?> factory, PaintForm form, PaintFormFactory<?> paintFormFactory) {
+    public void addFactory(String name, Factory<?> factory, PaintFormFactory<?> paintFormFactory) {
         factoryFiller.add(name, factory);
-        formFiller.add(name, form);
         formFactoryFiller.add(name, paintFormFactory);
     }
 }

@@ -1,7 +1,7 @@
 package PaintInstructions;
 import java.awt.*;
 import WindowFolder.*;
-public class GridInstruction extends LayeredInstruction { //think about saving color after resetting window
+public class GridInstruction implements PaintInstructionV2 { //think about saving color after resetting window
     int columns;
     int rows;
     int cellSize;
