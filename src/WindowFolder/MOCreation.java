@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import Data.*;
 import Factories.Factory;
+import Factories.MObjectAdder;
 import PaintInstructions.Painter;
 import Terrain.*;
 import Factories.FactoryManager;
@@ -18,8 +19,8 @@ import java.util.regex.Pattern;
 
 public class MOCreation extends JDialog {
 
-    public MOCreation(FactoryManager manager,Painter painter, GameObjectPanel pane,
-                      FormFactoryManager formFactoryManager) {
+    public MOCreation(MObjectAdder mObjectAdder, PaintAdder paintAdder, GameObjectPanel pane,
+                      FormFactoryManager formFactoryManager, String currentFactoryName) {
         //Dialog settings
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(new Dimension(1000,800));
@@ -55,8 +56,8 @@ public class MOCreation extends JDialog {
         FormManager formManager = formFactoryManager.createFormManager();
         PaintInstructionPanel preview = new PaintInstructionPanel(formManager.getForm("Forest"), new Point(100,100));
         ChooseColor chooseColor = new ChooseColor(formManager.getForm("Forest"), preview);
-        MObjectBox box = new MObjectBox(manager, preview, chooseColor, data, formManager, chooser);
-        FinishAction finishAction = new FinishAction(manager, form,this,painter, formManager, pane, box.getHolder());
+        MObjectBox box = new MObjectBox(mObjectAdder, preview, chooseColor, data, formManager, chooser, currentFactoryName);
+        FinishAction finishAction = new FinishAction(mObjectAdder, form, paintAdder, formManager, pane, box.getHolder());
         JButton finish = new JButton();
         finish.addActionListener(finishAction);
         add(finish, BorderLayout.EAST);
@@ -75,19 +76,18 @@ interface Holder<T> {
     T getObject();
 }
 class MObjectBox extends JComboBox<String> implements Holder<String>{
-    public MObjectBox(FactoryManager manager, PaintInstructionPanel preview, ChooseColor chooseColor,
-                      MObjectData data, FormManager formManager,JColorChooser colorChooser) {
+    public MObjectBox(MObjectAdder mObjectAdder, PaintInstructionPanel preview, ChooseColor chooseColor,
+                      MObjectData data, FormManager formManager,JColorChooser colorChooser, String currentName) {
         ChangeMObject changeMObject = new ChangeMObject(preview, chooseColor, data, formManager, colorChooser);
         addItemListener(changeMObject);
-        setItems(manager);
+        setItems(mObjectAdder, currentName);
     }
-    public void setItems(FactoryManager manager) {
-        String[] names = manager.getFactoriesName();
+    public void setItems(MObjectAdder adder, String currentName) {
+        String[] names = adder.getFactoryNames();
         for(String s : names) {
             addItem(s);
         }
-        System.out.println("Current factory" + manager.getCurrent().getName());
-        setSelectedItem(manager.getCurrent().getName());
+        setSelectedItem(currentName);
     }
     public String getObject() {
         return getItemAt(getSelectedIndex());
@@ -124,31 +124,27 @@ class ChangeMObject implements ItemListener {
     }
 }
 class FinishAction implements ActionListener {
-    FactoryManager manager;
-    Holder<String> holder;
+    MObjectAdder mObjectAdder;
+    Holder<String> factoryName;
     Form form;
-    Dialog dialog;
-    Painter painter;
+    PaintAdder paintAdder;
     FormManager formManager;
     GameObjectPanel panel;
-    public FinishAction(FactoryManager manager, Form form, Dialog dialog,
-                        Painter painter, FormManager formManager, GameObjectPanel panel, Holder<String> holder) {
-        this.manager = manager;
+    public FinishAction(MObjectAdder mObjectAdder, Form form,
+                        PaintAdder paintAdder, FormManager formManager, GameObjectPanel panel, Holder<String> holder) {
+        this.mObjectAdder = mObjectAdder;
         this.form = form;
-        this.dialog = dialog;
-        this.painter = painter;
+        this.paintAdder = paintAdder;
         this.formManager = formManager;
         this.panel = panel;
-        this.holder = holder;
+        factoryName = holder;
     }
     public void actionPerformed(ActionEvent e) {
-        Factory<?> current = manager.getFactory(holder.getObject());
-        current.store(form);
-        current.change(form.getName());
-        painter.addForm(form.getName(), formManager.getForm(current.getName()));
-        panel.updateButtons(manager, painter);
-        System.out.println(current.getName());
-        dialog.dispose();
+        mObjectAdder.store(factoryName.getObject(), form);
+        paintAdder.addForm(form.getName(), formManager.getForm(factoryName.getObject()));
+        panel.updateButtons(factoryName.getObject());
+        panel.dialogManager.release(DialogNames.MOCreation);
+
 
     }
 }

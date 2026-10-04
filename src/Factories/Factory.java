@@ -20,7 +20,6 @@ public abstract class Factory<T extends MapObject> {
     public abstract boolean check(Point point, MapData data);
     public void change(String name) {
         currentMapObject = mapObjects.get(name);
-        System.out.println("Current MObject: " + currentMapObject);
     }
     public void changeCurrent(String name, Integer value) {
         currentMapObject.addValue(name, value);

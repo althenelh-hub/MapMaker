@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Painter { //how do I now which PaintForm I use
+public class Painter implements PaintAdder, PaintChanger, PaintInjector{ //how do I now which PaintForm I use
     BufferedQueuedPanelV2 paintPanel;
     PaintForm currentForm;
     HashMap<String, PaintForm> forms = new HashMap<>();
@@ -20,15 +20,12 @@ public class Painter { //how do I now which PaintForm I use
     }
     public void paintForm(CellData cellData, Rectangle rect) {
         ArrayList<PaintInstructionV2> instructions = new ArrayList<>();
-        instructions.add(currentForm);
-        System.out.println("Painter: " + currentForm.color);
-        System.out.println(forms);
         PaintForm instruction;
         for(String name : cellData.mapObjects) {
             instruction = forms.get(name);
-            if(currentForm.layer < instruction.layer) {
-                instructions.add(instruction);
-            }
+
+            instructions.add(instruction);  //need layer sort
+
         }
         paintPanel.paintInstructions(instructions, rect);
     }

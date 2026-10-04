@@ -33,10 +33,9 @@ public class Window extends JFrame {
         communication.addFactory("Unit", new UnitFactory("Unit"), new PaintCircleFactory());
         paintPanel.addComponentListener(new SizeListener(mapGrid));
         FactoryManager factoryManager = communication.getFactoryManager();
-        factoryManager.changeFactory("Forest");
         Painter painter = new Painter(bufferedPanel);
-        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager.getFactorySwitch(), painter);
-        DialogManager dialogManager = new DialogManager(communication.getFormFactoryManager());
+        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager, painter);
+        DialogManager dialogManager = new DialogManager(communication.getFormFactoryManager(), factoryManager, painter);
         GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter, dialogManager);
         add(gameObjectPanel, BorderLayout.WEST);
         //new MOCreation(factoryManager, formManager, painter, gameObjectPanel);

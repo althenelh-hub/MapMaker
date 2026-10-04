@@ -2,7 +2,7 @@ package Listeners;
 import Data.CellData;
 import Factories.Factory;
 import Factories.FactoryManager;
-import Factories.FactorySwitch;
+import Factories.MObjectInjector;
 import PaintInstructions.*;
 import Terrain.MapObject;
 import WindowFolder.*;
@@ -12,17 +12,18 @@ import java.util.*;
 import Data.MapData;
 
 public class CoordinateListener implements MouseListener { //TilePainter
-    Painter painter;
+    PaintInjector paintInjector;
     MapGrid mapGrid;
     MapData mapData;
-    FactorySwitch factorySwitch;
+    MObjectInjector injector;
     int mode = 0;
-    public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid, FactorySwitch manager, Painter painter) {
+    public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid, MObjectInjector injector,
+                              PaintInjector paintInjector) {
         target.setMouseListener(this);
         this.mapGrid = mapGrid;
         mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
-        this.painter = painter;
-        this.factorySwitch = manager;
+        this.paintInjector = paintInjector;
+        this.injector = injector;
     }
     public void mouseClicked(MouseEvent e) {
         int button = e.getButton();
@@ -42,12 +43,10 @@ public class CoordinateListener implements MouseListener { //TilePainter
 
     }
     public void paintTile(Point p) {
-        System.out.println("Point data: " + p);
         Rectangle rect = mapGrid.getRectToFill(mapGrid.getCoordinate(p));
         Point cell = mapGrid.getCoordinate(p);
-        painter.paintForm(mapData.getCellData(cell), rect);
-        factorySwitch.put(cell, mapData);
-        System.out.println("Show cellData: " + mapData.getCellData(cell));
+        injector.put(cell, mapData);
+        paintInjector.paintForm(mapData.getCellData(cell), rect);
     }
     public void updateCell() {
 

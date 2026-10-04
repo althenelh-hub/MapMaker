@@ -6,32 +6,39 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import PaintInstructions.PaintChanger;
 import PaintInstructions.Painter;
 import Terrain.*;
 import Factories.*;
 import java.util.*;
 public class GameObjectPanel extends JTabbedPane {
     DialogManager dialogManager;
-    public GameObjectPanel(FactoryManager manager, Painter painter, DialogManager dialogManager) {
+    MObjectChanger changer;
+    PaintChanger paintChanger;
+    public GameObjectPanel(MObjectChanger changer, PaintChanger paintChanger, DialogManager dialogManager) {
         this.dialogManager = dialogManager;
-        String[] factoryNames = manager.getFactoriesName();
+        this.changer = changer;
+        this.paintChanger = paintChanger;
+        String[] factoryNames = changer.getFactoryNames();
         for(String s : factoryNames) {
             JPanel panel = new JPanel();
             addTab(s, panel);
+            //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         }
-        Managers managers = new Managers(manager, painter, dialogManager, this);
-        managers.fillCurrentComponent();
-        addChangeListener(new ChangeFactory(managers));
+        JComponentFiller filler = new JComponentFiller();
+        filler.fillButtons(changer, getCurrentTitle(), getCurrentPanel(), paintChanger);
+        filler.addButton(this);
+        addChangeListener(new DisplayCreationButton(this));
+        addChangeListener(new DisplayMObjects(changer, paintChanger));
     }
-    public void updateButtons(FactoryManager factoryManager, Painter painter) {
-        Factory<?> factory = factoryManager.getFactory(getCurrentTitle());
-        if(getTitleAt(getSelectedIndex()).equals(factory.getName())) {
+    public void updateButtons(String createdName) {
+        if(getTitleAt(getSelectedIndex()).equals(createdName)) {
 
             JComponentFiller filler = new JComponentFiller();
             JComponent component = getCurrentPanel();
             component.removeAll();
-            filler.fillButtons(factoryManager, getCurrentTitle(),component, painter);
-            filler.addButton(dialogManager, this, factoryManager, painter);
+            filler.fillButtons(changer, getCurrentTitle(),component, paintChanger);
+            filler.addButton(this);
             component.revalidate();
             component.repaint();
         }
@@ -43,95 +50,93 @@ public class GameObjectPanel extends JTabbedPane {
         return (JComponent)getComponentAt(getSelectedIndex());
     }
 }
-class Managers {
-    FactoryManager factoryManager;
-    Painter painter;
-    DialogManager dialogManager;
-    GameObjectPanel panel;
-    public Managers(FactoryManager factoryManager, Painter painter, DialogManager dialogManager,
-                    GameObjectPanel panel) {
-        this.factoryManager = factoryManager;
 
-        this.painter = painter;
-        this.dialogManager = dialogManager;
-        this.panel = panel;
-    }
-    public void updatePanel() {
-        panel.revalidate();
-        panel.repaint();
-    }
-    public void fillCurrentComponent() {
-        JComponentFiller filler = new JComponentFiller();
-        filler.fillButtons(factoryManager, panel.getCurrentTitle(),panel.getCurrentPanel(), painter);
-        filler.addButton(dialogManager, panel, factoryManager, painter);
-    }
-    public void activateCreation() {
-        dialogManager.activateCreation(factoryManager, painter, panel);
-    }
-}
 class JComponentFiller {
-    public void fillButtons(FactoryManager factoryManager, String factoryName, JComponent target, Painter painter) {
-        String[] names = factoryManager.getFactory(factoryName).getMObjectNames();
+    public void fillButtons(MObjectChanger changer, String factoryName, JComponent target, PaintChanger paintChanger) {
+        String[] names = changer.getMObjectNames(factoryName);
         target.removeAll();
         for(String s : names) {
             JButton button = new JButton(s);
-            SetMObject setter = new SetMObject(factoryManager, factoryName, s, painter);
+            SetMObject setter = new SetMObject(changer, factoryName, s, paintChanger);
             button.addActionListener(setter);
             target.add(button);
         }
+
     }
-    public void addButton(DialogManager dialogManager, GameObjectPanel gameObjectPanel, FactoryManager
-                          factoryManager, Painter painter) {
+    public void addButton(GameObjectPanel panel) {
         JButton button = new JButton("Add");
-        button.addActionListener(new MObjectCreationAction(dialogManager, gameObjectPanel,factoryManager,
-                painter));
-        JComponent component = gameObjectPanel.getCurrentPanel();
+        button.addActionListener(new MObjectCreationAction(panel));
+        JComponent component = panel.getCurrentPanel();
+        System.out.println("Component: " + component);
         component.add(button);
+        for(Component c: component.getComponents()) {
+            System.out.println("Button: " + c);
+        }
+        component.revalidate();
+        component.repaint();
+    }
+}
+class DisplayFactionControl implements ChangeListener {
+    GameObjectPanel panel;
+    String unitsName;
+    public DisplayFactionControl(GameObjectPanel panel, String unitsName, Factions factions) {
+        this.panel = panel;
+        this.unitsName= unitsName;
+    }
+    public void stateChanged(ChangeEvent e) {
+        if(panel.getCurrentTitle().equals(unitsName)) {
+
+        }
     }
 }
 class MObjectCreationAction implements ActionListener {
-    DialogManager manager;
-    FactoryManager factoryManager;
-    Painter painter;
     GameObjectPanel panel;
-    public MObjectCreationAction(DialogManager manager, GameObjectPanel panel, FactoryManager factoryManager,
-                                 Painter painter) {
-        this.manager = manager;
+    public MObjectCreationAction(GameObjectPanel panel) {
         this.panel = panel;
-        this.factoryManager = factoryManager;
-        this.painter = painter;
     }
     public void actionPerformed(ActionEvent e) {
-         manager.activateCreation(factoryManager, painter, panel);
+         panel.dialogManager.activateCreation(panel);
     }
 }
-class ChangeFactory implements ChangeListener {
-    Managers manager;
-    ChangeFactory(Managers manager) {
-        this.manager = manager;
-
+class DisplayCreationButton implements ChangeListener {
+    GameObjectPanel panel;
+    public DisplayCreationButton(GameObjectPanel panel) {
+        this.panel = panel;
     }
     public void stateChanged(ChangeEvent e) {
-        manager.fillCurrentComponent();
-        manager.updatePanel();
+        JComponentFiller filler = new JComponentFiller();
+        filler.addButton(panel);
+    }
+}
+class DisplayMObjects implements ChangeListener {
+    MObjectChanger changer;
+    PaintChanger painter;
+    public DisplayMObjects(MObjectChanger changer, PaintChanger painter) {
+        this.changer = changer;
+        this.painter = painter;
+    }
+    public void stateChanged(ChangeEvent e) {
+        JTabbedPane pane = (JTabbedPane)e.getSource();
+        String title = pane.getTitleAt(pane.getSelectedIndex());
+        JComponent panel = (JComponent) pane.getComponentAt(pane.getSelectedIndex());
+        JComponentFiller filler = new JComponentFiller();
+        filler.fillButtons(changer, title, panel, painter);
     }
 }
 class SetMObject implements ActionListener {
-    FactoryManager factoryManager;
+    MObjectChanger changer;
     String factoryName;
     String MObjectName;
-    Painter painter;
-    public SetMObject(FactoryManager factoryManager, String factoryName, String MObjectName, Painter painter) {
-        this.factoryManager = factoryManager;
+    PaintChanger paintChanger;
+    public SetMObject(MObjectChanger changer, String factoryName, String MObjectName, PaintChanger paintChanger) {
+        this.changer = changer;
         this.factoryName = factoryName;
         this.MObjectName = MObjectName;
-        this.painter = painter;
+        this.paintChanger = paintChanger;
     }
     public void actionPerformed(ActionEvent e) {
-        factoryManager.changeFactory(factoryName);
-        Factory<?> factory = factoryManager.getFactory(factoryName);
-        factory.change(MObjectName);
-        painter.setCurrentForm(MObjectName);
+        changer.changeFactory(factoryName, MObjectName);
+        paintChanger.setCurrentForm(MObjectName);
     }
 }
 
