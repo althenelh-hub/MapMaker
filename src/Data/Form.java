@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Form {
     StringReceiver name;
-    ArrayList<Characteristic> fields;
+    ArrayList<NamedCharacteristic> fields;
     public Form(StringReceiver name) {
         this.name = name;
         fields = new ArrayList<>();
@@ -16,14 +16,18 @@ public class Form {
         return name.text;
     }
     public void fillMapObject(MapObject MObject) {
-        for(Characteristic characteristic : fields) {
-            MObject.addValue(characteristic.getName(), characteristic.value);
+        for(NamedCharacteristic characteristic : fields) {
+            System.out.println(characteristic.getCharacteristic().value);
+            MObject.addValue(characteristic.receiver.text, characteristic.getCharacteristic());
         }
+    }
+    public void changeField(int index, Characteristic<?> characteristic) {
+        fields.get(index).characteristic = characteristic;
     }
     public void emptyForm() {
         fields.clear();
     }
-    public void addField(Characteristic characteristic) {
+    public void addField(NamedCharacteristic characteristic) {
         fields.add(characteristic);
     }
     public void removeField(int index) {
@@ -31,7 +35,7 @@ public class Form {
     }
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        for(Characteristic c : fields) {
+        for(NamedCharacteristic c : fields) {
             builder.append(c).append("\n");
         }
         return builder.toString();

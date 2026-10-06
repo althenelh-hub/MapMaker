@@ -1,19 +1,22 @@
 package Data;
 
 
-public class Characteristic {
-    StringReceiver name;
-    public int value;
+import WindowFolder.DisplayMethod;
+
+import javax.swing.*;
+import java.awt.event.ActionListener;
+
+public abstract class Characteristic<T> {
+    protected T value;
     public Characteristic() {
-        name = new StringReceiver();
+
     }
+    public void setValue(T value) {
+        this.value = value;
+    }
+    public abstract JComponent display();
     public String toString() {
-        return "Name: " + name + "Value: " + value;
+        return value.toString();
     }
-    public String getName() {
-        return name.text;
-    }
-    public StringReceiver getReceiver () {
-        return name;
-    }
+
 }

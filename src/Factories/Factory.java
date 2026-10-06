@@ -21,7 +21,7 @@ public abstract class Factory<T extends MapObject> {
     public void change(String name) {
         currentMapObject = mapObjects.get(name);
     }
-    public void changeCurrent(String name, Integer value) {
+    public void changeCurrent(String name, Characteristic<?> value) {
         currentMapObject.addValue(name, value);
     }
     public void store (Form form) {

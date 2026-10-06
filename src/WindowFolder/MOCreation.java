@@ -187,12 +187,15 @@ class MObjectData {
     }
     public void add() {
         JTextField label = new JTextField();
-        JTextField value = new JTextField();
         JButton button = new JButton();
-        Characteristic characteristic = new Characteristic();
+        NamedCharacteristic characteristic = new NamedCharacteristic(new IntegerCharacteristic());
         label.addActionListener(new TransportCharacteristicName(characteristic.getReceiver()));
-        value.addActionListener(new CheckTF(characteristic));
-        MOField field = new MOField(label, value, button);
+        JComboBox<DisplayItem> comboBox = new JComboBox<>();
+        comboBox.addItem(new DisplayItem("Integer", DisplayMethod.TextFieldInt));
+        comboBox.addItem(new DisplayItem("Bool", DisplayMethod.CheckBox));
+        comboBox.addItem(new DisplayItem("String", DisplayMethod.TextFieldString));
+        MOField field = new MOField(label, characteristic.characteristic.display(), button, comboBox);
+        comboBox.addActionListener(new ChangeCharacteristicDisplay(panel.getLength(),panel, field, form));
         button.addActionListener(new RemoveAction(this));
         panel.addField(field);
         form.addField(characteristic);
@@ -205,59 +208,56 @@ class MObjectData {
         return panel.getLength();
     }
 }
+
 class MOField {
     public JTextField name;
-    public JTextField value;
+    public JComponent value;
+    JComboBox<DisplayItem> comboBox;
     JButton removeButton;
-    public MOField(JTextField name, JTextField value, JButton button) {
+    public MOField(JTextField name, JComponent value, JButton button, JComboBox<DisplayItem> comboBox) {
         this.name = name;
         this.value = value;
         removeButton = button;
+        this.comboBox = comboBox;
     }
     public void addToPanel(JPanel panel) {
         panel.add(name);
         panel.add(value);
         panel.add(removeButton);
+        panel.add(comboBox);
     }
     public void removeFromPanel(JPanel panel) {
         panel.remove(name);
         panel.remove(value);
         panel.remove(removeButton);
+        panel.remove(comboBox);
     }
 }
-class CheckTF implements ActionListener {
-    Characteristic characteristic;
-    public CheckTF(Characteristic characteristic) {
-        this.characteristic = characteristic;
+class ChangeCharacteristicDisplay implements ActionListener {
+    int index;
+    JPanel panel;
+    MOField field;
+    Form form;
+    public ChangeCharacteristicDisplay(int index, JPanel panel, MOField field, Form form) {
+        this.index = index;
+        this.panel = panel;
+        this.field = field;
+        this.form = form;
     }
     public void actionPerformed(ActionEvent e) {
-        String text = ((JTextField)e.getSource()).getText();
-        InputChecker checker = new InputChecker();
-        if(checker.checkOnDigits(text)) {
-            characteristic.value = Integer.parseInt(text);
+        if(index < panel.getComponentCount()) {
+            panel.remove(index*4+1);
+            JComboBox<DisplayItem> comboBox = (JComboBox<DisplayItem>)e.getSource();
+            DisplayItem item = comboBox.getItemAt(comboBox.getSelectedIndex());
+            Characteristic<?> characteristic = new CharacteristicFactory().create(item.getDisplayMethod());
+            JComponent component = characteristic.display();
+            panel.add(component, index*4+1);
+            form.changeField(index, characteristic);
+            field.value = component;
+            panel.revalidate();
+            panel.repaint();
         }
-        System.out.println("Value is set");
-    }
 
-}
-class InputChecker {
-    public boolean checkOnDigits(String text) {
-        if (text.charAt(0) < 49 && text.length()>1 || text.charAt(0) > 58) {
-            System.out.println("Wrong first");
-            return false;
-        }
-        for(int i = 0;i < text.length();i++) {
-            if(text.charAt(i) < 47 && text.charAt(i) > 58) {
-                System.out.println("Wrong format");
-                return false;
-            }
-        }
-        return true;
-    }
-    public boolean checkPureLetters(String text) {
-        Pattern pattern = Pattern.compile("[^a-zA-Z]");
-        Matcher matcher = pattern.matcher(text);
-        return !matcher.find();
     }
 }
 class TransportCharacteristicName implements ActionListener {
@@ -291,7 +291,7 @@ class MOManagePanel extends JPanel {
     ArrayList<MOField> fields;
     MOManagePanel() {
         fields = new ArrayList<>();
-        setLayout(new GridLayout(0,3));
+        setLayout(new GridLayout(0,4));
     }
     public void emptyAll() {
         fields.clear();
