@@ -76,16 +76,48 @@ class JComponentFiller {
         component.repaint();
     }
 }
+class FactionMenu extends JPanel{
+    JCheckBox[] checkBoxes;
+    int current;
+    public FactionMenu(Factions factions) {
+        checkBoxes = new JCheckBox[factions.factionNames.size()];
+        current = 0;
+        checkBoxes[current].setSelected(true);
+    }
+    public void changeFaction(int index) {
+        checkBoxes[current].setSelected(false);
+        checkBoxes[index].setSelected(true);
+        current = index;
+    }
+    public void createBoxes(Factions factions) {
+        for(String s : factions.getFactionNames()) {
+            JCheckBox box = new JCheckBox(s, false);
+            add(box);
+
+        }
+    }
+}
+class ChooseFaction implements ChangeListener {
+    FactionMenu factionMenu;
+    int index;
+    public void stateChanged(ChangeEvent e) {
+        factionMenu.changeFaction(index);
+    }
+}
 class DisplayFactionControl implements ChangeListener {
     GameObjectPanel panel;
     String unitsName;
+    Factions factions;
     public DisplayFactionControl(GameObjectPanel panel, String unitsName, Factions factions) {
         this.panel = panel;
-        this.unitsName= unitsName;
+        this.unitsName = unitsName;
     }
     public void stateChanged(ChangeEvent e) {
         if(panel.getCurrentTitle().equals(unitsName)) {
+            for(String s : factions.getFactionNames()) {
 
+
+            }
         }
     }
 }
