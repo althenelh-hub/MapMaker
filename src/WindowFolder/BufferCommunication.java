@@ -6,29 +6,22 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
-public class BufferCommunication extends JPanel{
+public class BufferCommunication extends PaintPanel<PaintInstructionV2> {
     ArrayList<PaintInstructionV2> instructions = new ArrayList<>();
-    PaintInstructionV2 image;
-    Rectangle paintArea;
     Rectangle currentArea;
     public BufferCommunication(PaintInstructionV2 image, Point areaSize) {
-        Rectangle size = getBounds();
-        paintArea = new Rectangle(0, 0, areaSize.x, areaSize.y);
+        super(areaSize);
         //setStartingPoint();
         currentArea = new Rectangle(0,0,0,0);
-        this.image = image;
+        this.instruction = image;
     }
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void paintInstruction(Graphics g) {
         if(instructions.isEmpty()) {
-            setStartingPoint();
-            image.fulfill(g, paintArea);
+            super.paintInstruction(g);
         }
         else {
             for(PaintInstructionV2 p : instructions) {
-                System.out.println("Before paintTile: " + currentArea);
                 p.fulfill(g, currentArea);
-                System.out.println();
             }
             instructions.clear();
         }
@@ -37,11 +30,6 @@ public class BufferCommunication extends JPanel{
         paintArea.width += point.x;
         paintArea.height += point.y;
         setStartingPoint();
-    }
-    public void setStartingPoint() {
-        Rectangle rectangle = getBounds();
-        paintArea.x = (rectangle.width-paintArea.width)/2;
-        paintArea.y = (rectangle.height-paintArea.height)/2;
     }
     public void put(ArrayList<PaintInstructionV2> instructions, Rectangle Area) {
         this.instructions.addAll(instructions);

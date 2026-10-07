@@ -54,9 +54,10 @@ public class MOCreation extends JDialog {
         JColorChooser chooser = new JColorChooser();
         JPanel previewAndMode = new JPanel();
         FormManager formManager = formFactoryManager.createFormManager();
-        PaintInstructionPanel preview = new PaintInstructionPanel(formManager.getForm("Forest"), new Point(100,100));
-        ChooseColor chooseColor = new ChooseColor(formManager.getForm("Forest"), preview);
-        MObjectBox box = new MObjectBox(mObjectAdder, preview, chooseColor, data, formManager, chooser, currentFactoryName);
+        MultiPaintPanel paintPanel = new MultiPaintPanel(formManager, new Point(100,100));
+        paintPanel.instruction = formManager.getForm("Forest");
+        ChooseColor chooseColor = new ChooseColor(paintPanel);
+        MObjectBox box = new MObjectBox(mObjectAdder, paintPanel , data,  currentFactoryName);
         FinishAction finishAction = new FinishAction(mObjectAdder, form, paintAdder, formManager, pane, box.getHolder());
         JButton finish = new JButton();
         finish.addActionListener(finishAction);
@@ -64,7 +65,7 @@ public class MOCreation extends JDialog {
         previewAndMode.setLayout(new BoxLayout(previewAndMode, BoxLayout.Y_AXIS));
         previewAndMode.add(box);
 
-        previewAndMode.add(preview);
+        previewAndMode.add(paintPanel);
         chooser.getSelectionModel().addChangeListener(chooseColor);
         add(previewAndMode, BorderLayout.CENTER);
         add(chooser, BorderLayout.SOUTH);
@@ -76,14 +77,14 @@ interface Holder<T> {
     T getObject();
 }
 class MObjectBox extends JComboBox<String> implements Holder<String>{
-    public MObjectBox(MObjectAdder mObjectAdder, PaintInstructionPanel preview, ChooseColor chooseColor,
-                      MObjectData data, FormManager formManager,JColorChooser colorChooser, String currentName) {
-        ChangeMObject changeMObject = new ChangeMObject(preview, chooseColor, data, formManager, colorChooser);
-        addItemListener(changeMObject);
+    public MObjectBox(MObjectAdder mObjectAdder, MultiPaintPanel preview,
+                      MObjectData data, String currentName) {
+        addItemListener(new ChangePreview(preview));
+        addItemListener(new EmptyData(data));
         setItems(mObjectAdder, currentName);
     }
-    public void setItems(MObjectAdder adder, String currentName) {
-        String[] names = adder.getFactoryNames();
+    public void setItems(MObjectAdder adder, String currentName) { //currentName cause add button panel can be different from
+        String[] names = adder.getFactoryNames();                  //current factory
         for(String s : names) {
             addItem(s);
         }
@@ -96,31 +97,27 @@ class MObjectBox extends JComboBox<String> implements Holder<String>{
         return this;
     }
 }
-class ChangeMObject implements ItemListener {
-    PaintInstructionPanel preview;
-    FormManager formManager;
-    ChooseColor chooseColor;
-    MObjectData data;
-    JColorChooser colorChooser;
-    public ChangeMObject(PaintInstructionPanel panel,
-                         ChooseColor chooseColor, MObjectData data, FormManager formManager, JColorChooser colorChooser) {
-        preview = panel;
-        this.chooseColor = chooseColor;
-        this.data = data;
-        this.formManager = formManager;
-        this.colorChooser = colorChooser;
+class ChangePreview implements ItemListener {
+    MultiPaintPanel paintPanel;
+    public ChangePreview(MultiPaintPanel paintPanel) {
+        this.paintPanel = paintPanel;
     }
     public void itemStateChanged(ItemEvent e) {
         if(e.getStateChange() == ItemEvent.SELECTED) {
-            String name = (String)e.getItem();
-            PaintForm form = formManager.getForm(name);
-            preview.setInstruction(form);
-            data.empty();
-            chooseColor.form = form;
-            form.setColor(colorChooser.getColor());
-            preview.repaint();
+            paintPanel.changeForm((String)e.getItem());
+            paintPanel.repaint();
         }
-
+    }
+}
+class EmptyData implements ItemListener {
+    MObjectData data;
+    public EmptyData(MObjectData data) {
+        this.data = data;
+    }
+    public void itemStateChanged(ItemEvent e) {
+        if(e.getStateChange() == ItemEvent.SELECTED) {
+            data.empty();
+        }
     }
 }
 class FinishAction implements ActionListener {
@@ -149,18 +146,14 @@ class FinishAction implements ActionListener {
     }
 }
 class ChooseColor implements ChangeListener {
-    PaintForm form;
-    JPanel preview;
-    public ChooseColor(PaintForm form, JPanel panel) {
-        this.form = form;
-        this.preview = panel;
+    Receiver<Color> paintPanel;
+    public ChooseColor(Receiver<Color> paintPanel) {
+        this.paintPanel = paintPanel;
     }
     public void stateChanged(ChangeEvent e) {
         ColorSelectionModel model = (DefaultColorSelectionModel)e.getSource();
         Color color = model.getSelectedColor();
-        form.setColor(color);
-        preview.revalidate();
-        preview.repaint();
+        paintPanel.receive(color);
     }
 }
 
@@ -194,8 +187,9 @@ class MObjectData {
         comboBox.addItem(new DisplayItem("Integer", DisplayMethod.TextFieldInt));
         comboBox.addItem(new DisplayItem("Bool", DisplayMethod.CheckBox));
         comboBox.addItem(new DisplayItem("String", DisplayMethod.TextFieldString));
-        MOField field = new MOField(label, characteristic.characteristic.display(), button, comboBox);
-        comboBox.addActionListener(new ChangeCharacteristicDisplay(panel.getLength(),panel, field, form));
+        Component[] components = new Component[]{label, characteristic.characteristic.display(), button,comboBox};
+        MOField field = new MOField(components);
+        comboBox.addActionListener(new ChangeCharacteristicDisplay(panel.getLength(),form, panel));
         button.addActionListener(new RemoveAction(this));
         panel.addField(field);
         form.addField(characteristic);
@@ -210,50 +204,59 @@ class MObjectData {
 }
 
 class MOField {
-    public JTextField name;
-    public JComponent value;
-    JComboBox<DisplayItem> comboBox;
-    JButton removeButton;
-    public MOField(JTextField name, JComponent value, JButton button, JComboBox<DisplayItem> comboBox) {
-        this.name = name;
-        this.value = value;
-        removeButton = button;
-        this.comboBox = comboBox;
+    Component[] components;
+    public MOField(Component[] components) {
+        this.components = components;
     }
     public void addToPanel(JPanel panel) {
-        panel.add(name);
-        panel.add(value);
-        panel.add(removeButton);
-        panel.add(comboBox);
+        for(Component component : components) {
+            panel.add(component);
+        }
     }
     public void removeFromPanel(JPanel panel) {
-        panel.remove(name);
-        panel.remove(value);
-        panel.remove(removeButton);
-        panel.remove(comboBox);
+        for(Component component : components) {
+            panel.remove(component);
+        }
+    }
+    public int getLength() {
+        return components.length;
+    }
+    public int getComponentIndex(Component component) {
+        for(int i = 0;i < getLength();i++) {
+            if(components[i].equals(component)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public void replaceComponent(int index, Component component) {
+        components[index] = component;
+    }
+    public void replaceComponent(Component oldComponent, Component nextComponent) {
+        for(int i = 0;i< getLength();i++) {
+            if(components[i].equals(oldComponent)) {
+                components[i] = nextComponent;
+            }
+        }
     }
 }
 class ChangeCharacteristicDisplay implements ActionListener {
     int index;
-    JPanel panel;
-    MOField field;
     Form form;
-    public ChangeCharacteristicDisplay(int index, JPanel panel, MOField field, Form form) {
+    MOManagePanel panel;
+    public ChangeCharacteristicDisplay(int index, Form form, MOManagePanel panel) {
         this.index = index;
         this.panel = panel;
-        this.field = field;
         this.form = form;
     }
     public void actionPerformed(ActionEvent e) {
         if(index < panel.getComponentCount()) {
-            panel.remove(index*4+1);
             JComboBox<DisplayItem> comboBox = (JComboBox<DisplayItem>)e.getSource();
             DisplayItem item = comboBox.getItemAt(comboBox.getSelectedIndex());
             Characteristic<?> characteristic = new CharacteristicFactory().create(item.getDisplayMethod());
             JComponent component = characteristic.display();
-            panel.add(component, index*4+1);
             form.changeField(index, characteristic);
-            field.value = component;
+            panel.replace(component,index);
             panel.revalidate();
             panel.repaint();
         }
@@ -292,6 +295,16 @@ class MOManagePanel extends JPanel {
     MOManagePanel() {
         fields = new ArrayList<>();
         setLayout(new GridLayout(0,4));
+    }
+    public void replace(Component component, int fieldIndex) {
+        MOField field = fields.get(fieldIndex);
+        int componentIndex = field.getComponentIndex(component);
+        int panelIndex = fieldIndex*field.getLength()+ componentIndex;
+        remove(panelIndex);
+        add(component, panelIndex);
+        field.replaceComponent(componentIndex, component);
+
+
     }
     public void emptyAll() {
         fields.clear();

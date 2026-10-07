@@ -10,6 +10,9 @@ public abstract class PaintForm extends LayeredInstruction {
         g.setColor(color);
         paintForm(g, rectangle);
     }
+    public Color getColor() {
+        return color;
+    }
     public abstract void paintForm(Graphics g, Rectangle rectangle);
     public void setColor(Color color) {
         this.color = color;

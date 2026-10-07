@@ -24,6 +24,9 @@ public class Form {
     public void changeField(int index, Characteristic<?> characteristic) {
         fields.get(index).characteristic = characteristic;
     }
+    public void setStringReceiver(StringReceiver receiver) {
+        this.name = receiver;
+    }
     public void emptyForm() {
         fields.clear();
     }
