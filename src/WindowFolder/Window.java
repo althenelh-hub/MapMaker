@@ -30,13 +30,14 @@ public class Window extends JFrame {
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
         FactoryFormCommunication communication = new FactoryFormCommunication();
         communication.addFactory("Forest", new ForestFactory("Forest"), new PaintTileFactory());
-        communication.addFactory("Unit", new UnitFactory("Unit"), new PaintCircleFactory());
+        UnitFactory unitFactory = new UnitFactory("Unit");
+        communication.addFactory("Unit", unitFactory, new PaintCircleFactory());
         paintPanel.addComponentListener(new SizeListener(mapGrid));
         FactoryManager factoryManager = communication.getFactoryManager();
         Painter painter = new Painter(bufferedPanel);
         CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager, painter);
         DialogManager dialogManager = new DialogManager(communication.getFormFactoryManager(), factoryManager, painter);
-        GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter, dialogManager);
+        GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter, dialogManager, unitFactory.getFaction());
         add(gameObjectPanel, BorderLayout.WEST);
         //new MOCreation(factoryManager, formManager, painter, gameObjectPanel);
         System.out.println("window " + paintPanel.getBounds());

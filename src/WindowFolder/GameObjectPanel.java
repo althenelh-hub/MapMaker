@@ -15,10 +15,13 @@ public class GameObjectPanel extends JTabbedPane {
     DialogManager dialogManager;
     MObjectChanger changer;
     PaintChanger paintChanger;
-    public GameObjectPanel(MObjectChanger changer, PaintChanger paintChanger, DialogManager dialogManager) {
+    Keeper<String> factionLink;
+    public GameObjectPanel(MObjectChanger changer, PaintChanger paintChanger, DialogManager dialogManager,
+                           Keeper<String> factionLink) {
         this.dialogManager = dialogManager;
         this.changer = changer;
         this.paintChanger = paintChanger;
+        this.factionLink = factionLink;
         String[] factoryNames = changer.getFactoryNames();
         for(String s : factoryNames) {
             JPanel panel = new JPanel();
@@ -26,10 +29,10 @@ public class GameObjectPanel extends JTabbedPane {
             //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         }
         JComponentFiller filler = new JComponentFiller();
-        filler.fillButtons(changer, getCurrentTitle(), getCurrentPanel(), paintChanger);
+        filler.fillButtons(changer, getCurrentTitle(), getCurrentPanel(), paintChanger, factionLink);
         filler.addButton(this);
         addChangeListener(new DisplayCreationButton(this));
-        addChangeListener(new DisplayMObjects(changer, paintChanger));
+        addChangeListener(new DisplayMObjects(changer, paintChanger, factionLink));
     }
     public void updateButtons(String createdName) {
         if(getTitleAt(getSelectedIndex()).equals(createdName)) {
@@ -37,7 +40,7 @@ public class GameObjectPanel extends JTabbedPane {
             JComponentFiller filler = new JComponentFiller();
             JComponent component = getCurrentPanel();
             component.removeAll();
-            filler.fillButtons(changer, getCurrentTitle(),component, paintChanger);
+            filler.fillButtons(changer, getCurrentTitle(),component, paintChanger, factionLink);
             filler.addButton(this);
             component.revalidate();
             component.repaint();
@@ -52,7 +55,8 @@ public class GameObjectPanel extends JTabbedPane {
 }
 
 class JComponentFiller {
-    public void fillButtons(MObjectChanger changer, String factoryName, JComponent target, PaintChanger paintChanger) {
+    public void fillButtons(MObjectChanger changer, String factoryName, JComponent target, PaintChanger paintChanger,
+                            Keeper<String> factionName) {
         String[] names = changer.getMObjectNames(factoryName);
         target.removeAll();
         for(String s : names) {
@@ -61,7 +65,9 @@ class JComponentFiller {
             button.addActionListener(setter);
             target.add(button);
         }
-
+        if(factoryName.equals("Unit")) {
+            target.add(new FactionControl(factionName));
+        }
     }
     public void addButton(GameObjectPanel panel) {
         JButton button = new JButton("Add");
@@ -76,48 +82,37 @@ class JComponentFiller {
         component.repaint();
     }
 }
-class FactionMenu extends JPanel{
-    JCheckBox[] checkBoxes;
-    int current;
-    public FactionMenu(Factions factions) {
-        checkBoxes = new JCheckBox[factions.factionNames.size()];
-        current = 0;
-        checkBoxes[current].setSelected(true);
+class FactionControl extends JPanel {
+    JCheckBox[] factions;
+    int currentFaction;
+    Keeper<String> faction;
+    public FactionControl(Keeper<String> factionLink) {
+        faction = factionLink;
+        JLabel first = new JLabel("Ally");
+        JLabel second = new JLabel("Enemy");
+        factions = new JCheckBox[]{new JCheckBox("Ally", false), new JCheckBox("Enemy", true)};
+        currentFaction = 1;
+        for(int i = 0;i < factions.length;i++) {
+            factions[i].addActionListener(new ChangeFaction(i));
+        }
+        add(first);
+        add(factions[0]);
+        add(second);
+        add(factions[1]);
     }
     public void changeFaction(int index) {
-        checkBoxes[current].setSelected(false);
-        checkBoxes[index].setSelected(true);
-        current = index;
+        factions[currentFaction].setSelected(false);
+        factions[index].setSelected(true);
+        faction.setValue(factions[index].getText());
+        currentFaction = index;
     }
-    public void createBoxes(Factions factions) {
-        for(String s : factions.getFactionNames()) {
-            JCheckBox box = new JCheckBox(s, false);
-            add(box);
-
+    class ChangeFaction implements ActionListener {
+        int index;
+        public ChangeFaction(int index) {
+            this.index = index;
         }
-    }
-}
-class ChooseFaction implements ChangeListener {
-    FactionMenu factionMenu;
-    int index;
-    public void stateChanged(ChangeEvent e) {
-        factionMenu.changeFaction(index);
-    }
-}
-class DisplayFactionControl implements ChangeListener {
-    GameObjectPanel panel;
-    String unitsName;
-    Factions factions;
-    public DisplayFactionControl(GameObjectPanel panel, String unitsName, Factions factions) {
-        this.panel = panel;
-        this.unitsName = unitsName;
-    }
-    public void stateChanged(ChangeEvent e) {
-        if(panel.getCurrentTitle().equals(unitsName)) {
-            for(String s : factions.getFactionNames()) {
-
-
-            }
+        public void actionPerformed(ActionEvent e) {
+            changeFaction(index);
         }
     }
 }
@@ -143,16 +138,18 @@ class DisplayCreationButton implements ChangeListener {
 class DisplayMObjects implements ChangeListener {
     MObjectChanger changer;
     PaintChanger painter;
-    public DisplayMObjects(MObjectChanger changer, PaintChanger painter) {
+    Keeper<String> factionLink;
+    public DisplayMObjects(MObjectChanger changer, PaintChanger painter, Keeper<String> factionLink) {
         this.changer = changer;
         this.painter = painter;
+        this.factionLink = factionLink;
     }
     public void stateChanged(ChangeEvent e) {
         JTabbedPane pane = (JTabbedPane)e.getSource();
         String title = pane.getTitleAt(pane.getSelectedIndex());
         JComponent panel = (JComponent) pane.getComponentAt(pane.getSelectedIndex());
         JComponentFiller filler = new JComponentFiller();
-        filler.fillButtons(changer, title, panel, painter);
+        filler.fillButtons(changer, title, panel, painter, factionLink);
     }
 }
 class SetMObject implements ActionListener {

@@ -26,6 +26,7 @@ public class MapData {
         }
         if(containsUnit(p)) {
             names.add(units.get(p).name);
+            names.add(units.get(p).getFaction());
         }
         String[] result = new String[names.size()];
         data.mapObjects = names.toArray(result);

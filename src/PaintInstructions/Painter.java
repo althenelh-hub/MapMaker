@@ -14,6 +14,12 @@ public class Painter implements PaintAdder, PaintChanger, PaintInjector{ //how d
     HashMap<String, PaintForm> forms = new HashMap<>();
     public Painter(BufferedQueuedPanelV2 paintPanel) {
         this.paintPanel = paintPanel;
+        PaintOval oval = new PaintOval();
+        oval.setColor(Color.BLUE);
+        forms.put("Ally", oval);
+        oval = new PaintOval();
+        oval.setColor(Color.RED);
+        forms.put("Enemy", oval);
     }
     public void addForm(String name, PaintForm form) {
         forms.put(name, form);
@@ -23,7 +29,7 @@ public class Painter implements PaintAdder, PaintChanger, PaintInjector{ //how d
         PaintForm instruction;
         for(String name : cellData.mapObjects) {
             instruction = forms.get(name);
-
+            System.out.println(instruction + " instruction " + name);
             instructions.add(instruction);  //need layer sort
 
         }

@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class PaintCircleFactory implements PaintFormFactory<PaintCircle> {
     public PaintCircle createForm(Color color) {
-        PaintCircle circle = new PaintCircle(1);
+        PaintCircle circle = new PaintCircle();
         circle.setColor(color);
         return circle;
     }
