@@ -8,13 +8,8 @@ import java.awt.*;
 import java.awt.event.*;
 import Data.*;
 import Factories.MObjectAdder;
-import Terrain.*;
 import PaintInstructions.*;
 import WindowFolder.ComponentFactories.NamerField;
-import WindowFolder.ComponentFactories.RemoveButton;
-import WindowFolder.ComponentFactories.RemoveStorage;
-
-import java.util.*;
 
 public class MOCreation extends JDialog {
 

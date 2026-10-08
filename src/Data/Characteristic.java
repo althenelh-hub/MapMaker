@@ -14,7 +14,7 @@ public abstract class Characteristic<T> {
     public void setValue(T value) {
         this.value = value;
     }
-    public abstract JComponent display();
+    public abstract JComponent display(boolean changeable);
     public String toString() {
         return value.toString();
     }

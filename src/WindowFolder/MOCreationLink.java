@@ -3,11 +3,11 @@ package WindowFolder;
 import Data.Characteristic;
 import Data.InfoStorage;
 import Data.NamedCharacteristic;
-import WindowFolder.ComponentFactories.RemoveStorage;
+import WindowFolder.ComponentFactories.RemoveIndexStorage;
 
 import java.awt.*;
 
-public class MOCreationLink implements RemoveStorage {
+public class MOCreationLink implements RemoveIndexStorage {
     MOManagePanel panel;
     InfoStorage form;
     public MOCreationLink(MOManagePanel panel, InfoStorage form) {

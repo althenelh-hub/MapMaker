@@ -9,7 +9,8 @@ import java.util.HashMap;
 
 public class MapObject {
     public String name;
-    HashMap<String, Characteristic<?>> values;
+    protected boolean modifiable;
+    protected HashMap<String, Characteristic<?>> values;
     public MapObject() {
         values = new HashMap<>();
     }
@@ -27,5 +28,8 @@ public class MapObject {
         for(String s : values.keySet()) {
             form.addField(new NamedCharacteristic(new StringReceiver(s), values.get(s)));
         }
+    }
+    public boolean isModifiable() {
+        return modifiable;
     }
 }

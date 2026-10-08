@@ -26,7 +26,7 @@ public class MObjectData {
         comboBox.addItem(new DisplayItem("Integer", DisplayMethod.TextFieldInt));
         comboBox.addItem(new DisplayItem("Bool", DisplayMethod.CheckBox));
         comboBox.addItem(new DisplayItem("String", DisplayMethod.TextFieldString));
-        Component[] components = new Component[]{label, characteristic.characteristic.display(), button,comboBox};
+        Component[] components = new Component[]{label, characteristic.characteristic.display(true), button,comboBox};
         MOField field = new MOField(components);
         comboBox.addActionListener(new ChangeCharacteristicDisplay(link));
         link.add(field, characteristic);
@@ -47,7 +47,7 @@ class ChangeCharacteristicDisplay implements ActionListener {
             JComboBox<DisplayItem> comboBox = (JComboBox<DisplayItem>)e.getSource();
             DisplayItem item = comboBox.getItemAt(comboBox.getSelectedIndex());
             Characteristic<?> characteristic = new CharacteristicFactory().create(item.getDisplayMethod());
-            JComponent component = characteristic.display();
+            JComponent component = characteristic.display(true);
             link.replace(component, index, characteristic, 1);
         }
 
