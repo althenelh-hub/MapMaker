@@ -1,11 +1,10 @@
 package Data;
 
-import Factories.Factory;
 import Terrain.MapObject;
 
 import java.util.ArrayList;
 
-public class Form {
+public class Form implements InfoStorage {
     StringReceiver name;
     ArrayList<NamedCharacteristic> fields;
     public Form(StringReceiver name) {
@@ -20,6 +19,9 @@ public class Form {
             System.out.println(characteristic.getCharacteristic().value);
             MObject.addValue(characteristic.receiver.text, characteristic.getCharacteristic());
         }
+    }
+    public NamedCharacteristic createField() {
+        return new NamedCharacteristic(new IntegerCharacteristic());
     }
     public void changeField(int index, Characteristic<?> characteristic) {
         fields.get(index).characteristic = characteristic;

@@ -10,6 +10,10 @@ import Data.*;
 import Factories.MObjectAdder;
 import Terrain.*;
 import PaintInstructions.*;
+import WindowFolder.ComponentFactories.NamerField;
+import WindowFolder.ComponentFactories.RemoveButton;
+import WindowFolder.ComponentFactories.RemoveStorage;
+
 import java.util.*;
 
 public class MOCreation extends JDialog {
@@ -23,10 +27,9 @@ public class MOCreation extends JDialog {
         //Dialog settings
         //Name field and finishAction
         JLabel name = new JLabel("Name:");
-        JTextField field = new JTextField();
         StringReceiver mObjectName = new StringReceiver();
+        JTextField field = new NamerField(mObjectName);
         Form form = new Form(mObjectName);
-        field.addActionListener(new TransportCharacteristicName(mObjectName));
         JPanel namePanel = new JPanel();
         namePanel.add(name);
         namePanel.add(field);
@@ -153,194 +156,10 @@ class ChooseColor implements ChangeListener {
     }
 }
 
-class AddField implements ActionListener {
-    MObjectData data;
-    public AddField(MObjectData data) {
-        this.data = data;
-    }
-    public void actionPerformed(ActionEvent e) {
-        data.add();
 
-    }
-}
-class MObjectData {
-    MOCreationLink link;
-    public MObjectData(MOCreationLink link) {
-        this.link = link;
-    }
-    public void add() {
-        JTextField label = new JTextField();
-        JButton button = new JButton();
-        NamedCharacteristic characteristic = new NamedCharacteristic(new IntegerCharacteristic());
-        label.addActionListener(new TransportCharacteristicName(characteristic.getReceiver()));
-        JComboBox<DisplayItem> comboBox = new JComboBox<>();
-        comboBox.addItem(new DisplayItem("Integer", DisplayMethod.TextFieldInt));
-        comboBox.addItem(new DisplayItem("Bool", DisplayMethod.CheckBox));
-        comboBox.addItem(new DisplayItem("String", DisplayMethod.TextFieldString));
-        Component[] components = new Component[]{label, characteristic.characteristic.display(), button,comboBox};
-        MOField field = new MOField(components);
-        comboBox.addActionListener(new ChangeCharacteristicDisplay(link));
-        button.addActionListener(new RemoveAction(link));
-        link.add(field, characteristic);
-    }
 
-}
 
-class MOField {
-    Component[] components;
-    public MOField(Component[] components) {
-        this.components = components;
-    }
-    public void addToPanel(JPanel panel) {
-        for(Component component : components) {
-            panel.add(component);
-        }
-    }
-    public void removeFromPanel(JPanel panel) {
-        for(Component component : components) {
-            panel.remove(component);
-        }
-    }
-    public int getLength() {
-        return components.length;
-    }
-    public int getComponentIndex(Component component) {
-        for(int i = 0;i < getLength();i++) {
-            System.out.println("i component: " + components[i]);
-            if(components[i].equals(component)) {
-                return i;
-            }
-        }
-        System.out.println("Searched component" + component);
-        return -1;
-    }
-    public void replaceComponent(int index, Component component) {
-        components[index] = component;
-    }
-    public void replaceComponent(Component oldComponent, Component nextComponent) {
-        for(int i = 0;i< getLength();i++) {
-            if(components[i].equals(oldComponent)) {
-                components[i] = nextComponent;
-            }
-        }
-    }
-}
-class ChangeCharacteristicDisplay implements ActionListener {
-    int index;
-    MOCreationLink link;
-    public ChangeCharacteristicDisplay(MOCreationLink link) {
-        this.index = link.getLength();
-        this.link = link;
-    }
-    public void actionPerformed(ActionEvent e) {
-        if(index < link.getLength()) {
-            JComboBox<DisplayItem> comboBox = (JComboBox<DisplayItem>)e.getSource();
-            DisplayItem item = comboBox.getItemAt(comboBox.getSelectedIndex());
-            Characteristic<?> characteristic = new CharacteristicFactory().create(item.getDisplayMethod());
-            JComponent component = characteristic.display();
-            link.replace(component, index, characteristic, 1);
-        }
 
-    }
-}
-class TransportCharacteristicName implements ActionListener {
-    StringReceiver receiver;
-    public TransportCharacteristicName(StringReceiver characteristic) {
-        this.receiver = characteristic;
-    }
-    public void actionPerformed(ActionEvent e) {
-        String text = ((JTextField)e.getSource()).getText();
-        InputChecker checker = new InputChecker();
-        if(checker.checkPureLetters(text)) {
-            System.out.println(text);
-            System.out.println("Name is set");
-            receiver.receiveString(text);
-        }
-    }
-}
-class RemoveAction implements ActionListener {
-    int index;
-    MOCreationLink link;
-    public RemoveAction(MOCreationLink link) {
-        this.link = link;
-        this.index = link.getLength();
 
-    }
-    public void actionPerformed(ActionEvent e) {
-        link.remove(index);
-    }
-}
-class MOCreationLink {
-    MOManagePanel panel;
-    Form form;
-    public MOCreationLink(MOManagePanel panel, Form form) {
-        this.panel = panel;
-        this.form = form;
-    }
-    public void empty() {
-        panel.emptyAll();
-        form.emptyForm();
-    }
-    public void remove(int index) {
-        panel.remove(index);
-        form.removeField(index);
-    }
-    public void replace(Component component, int index, Characteristic<?> characteristic, int componentIndex) {
-        panel.replace(component, index, componentIndex);
-        form.changeField(index, characteristic);
-    }
-    public int getLength() {
-        return panel.getLength();
-    }
-    public void add(MOField field, NamedCharacteristic characteristic) {
-        panel.addField(field);
-        form.addField(characteristic);
-        System.out.println(form);
-    }
-}
-class MOManagePanel extends JPanel {
-    ArrayList<MOField> fields;
-    MOManagePanel() {
-        fields = new ArrayList<>();
-        setLayout(new GridLayout(0,4));
-    }
-    public void replace(Component component, int fieldIndex, int componentIndex) {
-        MOField field = fields.get(fieldIndex);
-        System.out.println(fieldIndex);
-        int panelIndex = fieldIndex*field.getLength()+ componentIndex;
-        remove(panelIndex);
-        add(component, panelIndex);
-        field.replaceComponent(componentIndex, component);
-        revalidate();
-        repaint();
-    }
-    public void emptyAll() {
-        fields.clear();
-        removeAll();
-    }
-    public void removeField(int index) {
-        if(index < fields.size()) {
-            MOField field = fields.get(index);
-            fields.remove(index);
-            field.removeFromPanel(this);
-            GridLayout layout = (GridLayout) getLayout();
-            layout.setRows(getLength());
-            revalidate();
-            repaint();
-            System.out.println(getLength());
-        }
-    }
-    public void addField(MOField field) {
-        fields.add(field);
-        field.addToPanel(this);
-        GridLayout layout = (GridLayout) getLayout();
-        layout.setRows(getLength());
-        revalidate();
-        repaint();
-        System.out.println(getLength());
-    }
-    public int getLength() {
-        return fields.size();
-    }
-}
+
 

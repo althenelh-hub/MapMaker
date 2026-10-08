@@ -1,6 +1,9 @@
 package Terrain;
 
 import Data.Characteristic;
+import Data.Form;
+import Data.NamedCharacteristic;
+import Data.StringReceiver;
 
 import java.util.HashMap;
 
@@ -19,5 +22,10 @@ public class MapObject {
             builder.append(s).append(": ").append(values.get(s)).append("\n");
         }
         return builder.toString();
+    }
+    public void shareValues(Form form) {
+        for(String s : values.keySet()) {
+            form.addField(new NamedCharacteristic(new StringReceiver(s), values.get(s)));
+        }
     }
 }

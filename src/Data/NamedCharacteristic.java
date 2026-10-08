@@ -7,6 +7,10 @@ public class NamedCharacteristic {
         this.characteristic = characteristic;
         receiver = new StringReceiver();
     }
+    public NamedCharacteristic(StringReceiver receiver, Characteristic<?> characteristic) {
+        this.receiver = receiver;
+        this.characteristic = characteristic;
+    }
     public Characteristic<?> getCharacteristic() {
         return characteristic;
     }
