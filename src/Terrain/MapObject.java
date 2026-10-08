@@ -24,6 +24,13 @@ public class MapObject {
         }
         return builder.toString();
     }
+    public void shareValues(MapObject mObject) {
+        mObject.values.clear();
+        for(String s : values.keySet()) {
+            mObject.addValue(s, values.get(s));
+        }
+    }
+
     public void shareValues(Form form) {
         for(String s : values.keySet()) {
             form.addField(new NamedCharacteristic(new StringReceiver(s), values.get(s)));

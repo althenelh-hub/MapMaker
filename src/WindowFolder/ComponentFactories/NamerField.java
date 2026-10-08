@@ -2,6 +2,7 @@ package WindowFolder.ComponentFactories;
 
 import Data.StringReceiver;
 import WindowFolder.InputChecker;
+import WindowFolder.Listeners.CharacteristicName;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

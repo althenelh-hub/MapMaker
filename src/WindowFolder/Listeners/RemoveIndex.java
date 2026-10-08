@@ -13,6 +13,6 @@ public class RemoveIndex implements ActionListener {
         this.index = index;
     }
     public void actionPerformed(ActionEvent e) {
-        storage.remove(index);
+        storage.removeField(index);
     }
 }

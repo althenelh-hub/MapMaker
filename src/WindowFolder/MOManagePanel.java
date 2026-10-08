@@ -1,10 +1,12 @@
 package WindowFolder;
 
+import WindowFolder.ComponentFactories.RemoveIndexStorage;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MOManagePanel extends JPanel {
+public class MOManagePanel extends JPanel implements RemoveIndexStorage {
     ArrayList<MOField> fields;
     MOManagePanel() {
         fields = new ArrayList<>();

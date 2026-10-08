@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class IntegerCharacteristic extends Characteristic<Integer> {
-    public JTextField display(boolean changeable) {
+    public JTextField display() {
         JTextField textField = new JTextField();
         textField.addActionListener(new IntegerSetter(this));
         return textField;

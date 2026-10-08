@@ -18,7 +18,7 @@ public class MOCreationLink implements RemoveIndexStorage {
         panel.emptyAll();
         form.emptyForm();
     }
-    public void remove(int index) {
+    public void removeField(int index) {
         panel.removeField(index);
         form.removeField(index);
     }

@@ -39,6 +39,8 @@ public class Window extends JFrame {
         DialogManager dialogManager = new DialogManager(communication.getFormFactoryManager(), factoryManager, painter);
         GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter, dialogManager, unitFactory.getFaction());
         add(gameObjectPanel, BorderLayout.WEST);
+        InfoPanel infoPanel = new InfoPanel();
+        add(infoPanel, BorderLayout.EAST);
         //new MOCreation(factoryManager, formManager, painter, gameObjectPanel);
         System.out.println("window " + paintPanel.getBounds());
     }

@@ -8,28 +8,23 @@ public class BoolCharacteristic extends Characteristic<Boolean> {
     public BoolCharacteristic() {
         value = true;
     }
-    public JCheckBox display(boolean changeable) {
+    public JCheckBox display() {
         JCheckBox checkBox = new JCheckBox();
-        checkBox.addActionListener(new BoolSetter(this, changeable));
+        checkBox.addActionListener(new BoolSetter(this));
         return checkBox;
     }
 }
 class BoolSetter implements ActionListener {
     Characteristic<Boolean> characteristic;
-    final boolean changeable;
-    public BoolSetter(Characteristic<Boolean> characteristic, boolean changeable) {
+
+    public BoolSetter(Characteristic<Boolean> characteristic) {
         this.characteristic = characteristic;
-        this.changeable = changeable;
     }
     public void actionPerformed(ActionEvent e) {
-        if(changeable) {
-            JCheckBox checkBox = (JCheckBox) e.getSource();
-            System.out.println("Set");
-            characteristic.setValue(checkBox.isSelected());
-            System.out.println(characteristic.value);
-        }
-        else {
+        JCheckBox checkBox = (JCheckBox) e.getSource();
+        System.out.println("Set");
+        characteristic.setValue(checkBox.isSelected());
+        System.out.println(characteristic.value);
 
-        }
     }
 }
