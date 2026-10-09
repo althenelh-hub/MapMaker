@@ -13,6 +13,6 @@ public class RemoveFromString implements ActionListener {
         this.name = name;
     }
     public void actionPerformed(ActionEvent e) {
-        storage.remove(name);
+        storage.removeField(name);
     }
 }

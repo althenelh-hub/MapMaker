@@ -1,5 +1,5 @@
 package WindowFolder.ComponentFactories;
 
 public interface RemoveStringStorage {
-    void remove(String name);
+    void removeField(String name);
 }

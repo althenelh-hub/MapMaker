@@ -36,7 +36,4 @@ public class MapObject {
             form.addField(new NamedCharacteristic(new StringReceiver(s), values.get(s)));
         }
     }
-    public boolean isModifiable() {
-        return modifiable;
-    }
 }
