@@ -8,8 +8,9 @@ import java.awt.event.ActionListener;
 
 public abstract class Characteristic<T> {
     protected T value;
-    public Characteristic() {
-
+    final int itemIndex;
+    public Characteristic(int itemIndex) {
+        this.itemIndex = itemIndex;
     }
     public void setValue(T value) {
         this.value = value;
@@ -18,5 +19,7 @@ public abstract class Characteristic<T> {
     public String toString() {
         return value.toString();
     }
-
+    public int getItemIndex() {
+        return itemIndex;
+    }
 }

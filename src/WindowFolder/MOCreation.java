@@ -38,7 +38,7 @@ public class MOCreation extends JDialog {
         panel.add(managePanel);
         JButton button = new JButton();
         MOCreationLink link = new MOCreationLink(managePanel, form);
-        MObjectData data = new MObjectData(link);
+        MObjectData<InfoModifier> data = new MObjectData<>(form, managePanel);
         button.addActionListener(new AddField(data));
         panel.add(button);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

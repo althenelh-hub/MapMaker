@@ -16,18 +16,24 @@ public class CoordinateListener implements MouseListener { //TilePainter
     MapGrid mapGrid;
     MapData mapData;
     MObjectInjector injector;
-    int mode = 0;
+    MObjectShow show;
     public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid, MObjectInjector injector,
-                              PaintInjector paintInjector) {
+                              PaintInjector paintInjector, MObjectShow show) {
         target.setMouseListener(this);
         this.mapGrid = mapGrid;
         mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
         this.paintInjector = paintInjector;
         this.injector = injector;
+        this.show = show;
     }
     public void mouseClicked(MouseEvent e) {
-        int button = e.getButton();
-        paintTile(e.getPoint());
+        if(e.getButton() == MouseEvent.BUTTON1) {
+            paintTile(e.getPoint());
+        }
+        else if(e.getButton() == MouseEvent.BUTTON3) {
+            Point p = mapGrid.getCoordinate(e.getPoint());
+            show.show(mapData.getTerrain(p));
+        }
 
     }
     public void mouseEntered(MouseEvent e) {

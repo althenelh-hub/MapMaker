@@ -2,9 +2,7 @@ package Terrain;
 
 public class Unit extends MapObject {
     String faction;
-    public Unit() {
-        modifiable = true;
-    }
+
     public void shareValues(Unit unit) {
         for(String s : values.keySet()) {
             unit.addValue(s, values.get(s));

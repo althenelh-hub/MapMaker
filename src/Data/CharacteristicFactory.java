@@ -13,6 +13,7 @@ public class CharacteristicFactory {
     }
     public Characteristic<?> create(DisplayMethod displayMethod) {
         Creator creator = creators.get(displayMethod);
+        System.out.println("creator" + creator);
         return creator.create();
     }
 }
@@ -31,6 +32,9 @@ class StringCreator implements Creator {
 }
 class IntegerCreator implements Creator {
     public IntegerCharacteristic create() {
-        return new IntegerCharacteristic();
+
+        IntegerCharacteristic characteristic = new IntegerCharacteristic();
+        System.out.println(characteristic);
+        return characteristic;
     }
 }

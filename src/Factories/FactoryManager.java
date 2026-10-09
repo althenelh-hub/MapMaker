@@ -2,6 +2,7 @@ package Factories;
 
 import Data.Form;
 import Data.MapData;
+import Terrain.MapObject;
 
 import java.awt.*;
 import java.util.Set;
@@ -44,5 +45,8 @@ public class FactoryManager implements MObjectAdder, MObjectChanger, MObjectInje
     }
     public Factory<?> getCurrent() {
         return currentFactory;
+    }
+    public MapObject getCurrentMapObject() {
+        return currentFactory.currentMapObject;
     }
 }

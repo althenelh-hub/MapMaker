@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 public class BoolCharacteristic extends Characteristic<Boolean> {
     public BoolCharacteristic() {
+        super(1);
         value = true;
     }
     public JCheckBox display() {

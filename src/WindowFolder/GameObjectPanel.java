@@ -16,12 +16,14 @@ public class GameObjectPanel extends JTabbedPane {
     MObjectChanger changer;
     PaintChanger paintChanger;
     Keeper<String> factionLink;
+    MObjectShow mObjectShow;
     public GameObjectPanel(MObjectChanger changer, PaintChanger paintChanger, DialogManager dialogManager,
-                           Keeper<String> factionLink) {
+                           Keeper<String> factionLink, MObjectShow mObjectShow) {
         this.dialogManager = dialogManager;
         this.changer = changer;
         this.paintChanger = paintChanger;
         this.factionLink = factionLink;
+        this.mObjectShow = mObjectShow;
         String[] factoryNames = changer.getFactoryNames();
         for(String s : factoryNames) {
             JPanel panel = new JPanel();
@@ -29,10 +31,10 @@ public class GameObjectPanel extends JTabbedPane {
             //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         }
         JComponentFiller filler = new JComponentFiller();
-        filler.fillButtons(changer, getCurrentTitle(), getCurrentPanel(), paintChanger, factionLink);
+        filler.fillButtons(changer, getCurrentTitle(), getCurrentPanel(), paintChanger, factionLink, mObjectShow);
         filler.addButton(this);
         addChangeListener(new DisplayCreationButton(this));
-        addChangeListener(new DisplayMObjects(changer, paintChanger, factionLink));
+        addChangeListener(new DisplayMObjects(changer, paintChanger, factionLink, mObjectShow));
     }
     public void updateButtons(String createdName) {
         if(getTitleAt(getSelectedIndex()).equals(createdName)) {
@@ -40,7 +42,7 @@ public class GameObjectPanel extends JTabbedPane {
             JComponentFiller filler = new JComponentFiller();
             JComponent component = getCurrentPanel();
             component.removeAll();
-            filler.fillButtons(changer, getCurrentTitle(),component, paintChanger, factionLink);
+            filler.fillButtons(changer, getCurrentTitle(),component, paintChanger, factionLink, mObjectShow);
             filler.addButton(this);
             component.revalidate();
             component.repaint();
@@ -56,12 +58,12 @@ public class GameObjectPanel extends JTabbedPane {
 
 class JComponentFiller {
     public void fillButtons(MObjectChanger changer, String factoryName, JComponent target, PaintChanger paintChanger,
-                            Keeper<String> factionName) {
+                            Keeper<String> factionName, MObjectShow mObjectShow) {
         String[] names = changer.getMObjectNames(factoryName);
         target.removeAll();
         for(String s : names) {
             JButton button = new JButton(s);
-            SetMObject setter = new SetMObject(changer, factoryName, s, paintChanger);
+            SetMObject setter = new SetMObject(changer, factoryName, s, paintChanger, mObjectShow);
             button.addActionListener(setter);
             target.add(button);
         }
@@ -139,17 +141,19 @@ class DisplayMObjects implements ChangeListener {
     MObjectChanger changer;
     PaintChanger painter;
     Keeper<String> factionLink;
-    public DisplayMObjects(MObjectChanger changer, PaintChanger painter, Keeper<String> factionLink) {
+    MObjectShow mObjectShow;
+    public DisplayMObjects(MObjectChanger changer, PaintChanger painter, Keeper<String> factionLink, MObjectShow mObjectShow) {
         this.changer = changer;
         this.painter = painter;
         this.factionLink = factionLink;
+        this.mObjectShow = mObjectShow;
     }
     public void stateChanged(ChangeEvent e) {
         JTabbedPane pane = (JTabbedPane)e.getSource();
         String title = pane.getTitleAt(pane.getSelectedIndex());
         JComponent panel = (JComponent) pane.getComponentAt(pane.getSelectedIndex());
         JComponentFiller filler = new JComponentFiller();
-        filler.fillButtons(changer, title, panel, painter, factionLink);
+        filler.fillButtons(changer, title, panel, painter, factionLink, mObjectShow);
     }
 }
 class SetMObject implements ActionListener {
@@ -157,14 +161,18 @@ class SetMObject implements ActionListener {
     String factoryName;
     String MObjectName;
     PaintChanger paintChanger;
-    public SetMObject(MObjectChanger changer, String factoryName, String MObjectName, PaintChanger paintChanger) {
+    MObjectShow mObjectShow;
+    public SetMObject(MObjectChanger changer, String factoryName, String MObjectName, PaintChanger paintChanger,
+                      MObjectShow mObjectShow) {
         this.changer = changer;
         this.factoryName = factoryName;
         this.MObjectName = MObjectName;
         this.paintChanger = paintChanger;
+        this.mObjectShow = mObjectShow;
     }
     public void actionPerformed(ActionEvent e) {
         changer.changeFactory(factoryName, MObjectName);
+        mObjectShow.show(changer.getCurrentMapObject());
         paintChanger.setCurrentForm(MObjectName);
     }
 }

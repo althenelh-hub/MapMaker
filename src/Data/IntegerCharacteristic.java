@@ -7,6 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class IntegerCharacteristic extends Characteristic<Integer> {
+    public IntegerCharacteristic() {
+        super(0);
+        value = 0;
+    }
     public JTextField display() {
         JTextField textField = new JTextField();
         textField.addActionListener(new IntegerSetter(this));

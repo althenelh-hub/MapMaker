@@ -35,12 +35,13 @@ public class Window extends JFrame {
         paintPanel.addComponentListener(new SizeListener(mapGrid));
         FactoryManager factoryManager = communication.getFactoryManager();
         Painter painter = new Painter(bufferedPanel);
-        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager, painter);
         DialogManager dialogManager = new DialogManager(communication.getFormFactoryManager(), factoryManager, painter);
-        GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter, dialogManager, unitFactory.getFaction());
+        MObjectShow mObjectShow = new MObjectShow();
+        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager, painter, mObjectShow);
+        GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter, dialogManager, unitFactory.getFaction(),
+                mObjectShow);
         add(gameObjectPanel, BorderLayout.WEST);
-        InfoPanel infoPanel = new InfoPanel();
-        add(infoPanel, BorderLayout.EAST);
+        add(mObjectShow.getMainPanel(), BorderLayout.EAST);
         //new MOCreation(factoryManager, formManager, painter, gameObjectPanel);
         System.out.println("window " + paintPanel.getBounds());
     }

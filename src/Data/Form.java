@@ -3,45 +3,58 @@ package Data;
 import Terrain.MapObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
-public class Form implements InfoStorage {
+public class Form implements InfoModifier {
     StringReceiver name;
-    ArrayList<NamedCharacteristic> fields;
+    HashMap<String, Characteristic<?>> characteristics;
     public Form(StringReceiver name) {
         this.name = name;
-        fields = new ArrayList<>();
+        characteristics = new HashMap<>();
     }
     public String getName() {
         return name.text;
     }
     public void fillMapObject(MapObject MObject) {
-        for(NamedCharacteristic characteristic : fields) {
-            System.out.println(characteristic.getCharacteristic().value);
-            MObject.addValue(characteristic.receiver.text, characteristic.getCharacteristic());
+        for(String s : characteristics.keySet()){
+            MObject.addValue(s, characteristics.get(s));
         }
     }
+
+    @Override
+    public void changeCharacteristicName(String name, String nextName) {
+        Characteristic<?> characteristic = characteristics.get(name);
+        characteristics.remove(name);
+        characteristics.put(nextName, characteristic);
+        System.out.println(nextName + " " + characteristics.get(nextName));
+    }
+
     public NamedCharacteristic createField() {
         return new NamedCharacteristic(new IntegerCharacteristic());
     }
-    public void changeField(int index, Characteristic<?> characteristic) {
-        fields.get(index).characteristic = characteristic;
+    public void changeValue(String name, Characteristic<?> characteristic) {
+        characteristics.replace(name, characteristic);
+    }
+    public Set<String> getKeySet() {
+        return characteristics.keySet();
     }
     public void setStringReceiver(StringReceiver receiver) {
         this.name = receiver;
     }
-    public void emptyForm() {
-        fields.clear();
+    public void emptyFields() {
+        characteristics.clear();
     }
-    public void addField(NamedCharacteristic characteristic) {
-        fields.add(characteristic);
+    public void addValue(String name, Characteristic<?> characteristic) {
+        characteristics.put(name,  characteristic);
     }
-    public void removeField(int index) {
-        fields.remove(index);
+    public void removeField(String name) {
+        characteristics.remove(name);
     }
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        for(NamedCharacteristic c : fields) {
-            builder.append(c).append("\n");
+        for(String s : characteristics.keySet()) {
+            builder.append("Name: ").append(s).append(" Value: ").append(characteristics.get(s)).append("\n");
         }
         return builder.toString();
     }

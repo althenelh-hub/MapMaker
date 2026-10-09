@@ -5,6 +5,10 @@ import WindowFolder.InputChecker;
 import javax.swing.*;
 import java.awt.event.*;
 public class StringCharacteristic extends Characteristic<String> {
+    public StringCharacteristic() {
+        super(2);
+        value = "";
+    }
     public JTextField display() {
         JTextField field = new JTextField();
         field.addActionListener(new StringSetter(this));

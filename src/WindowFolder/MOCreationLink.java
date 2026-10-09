@@ -1,37 +1,38 @@
 package WindowFolder;
 
 import Data.Characteristic;
+import Data.InfoModifier;
 import Data.InfoStorage;
 import Data.NamedCharacteristic;
 import WindowFolder.ComponentFactories.RemoveIndexStorage;
 
 import java.awt.*;
 
-public class MOCreationLink implements RemoveIndexStorage {
+public class MOCreationLink {
     MOManagePanel panel;
-    InfoStorage form;
-    public MOCreationLink(MOManagePanel panel, InfoStorage form) {
+    InfoModifier form;
+    public MOCreationLink(MOManagePanel panel, InfoModifier form) {
         this.panel = panel;
         this.form = form;
     }
     public void empty() {
         panel.emptyAll();
-        form.emptyForm();
+        form.emptyFields();
     }
-    public void removeField(int index) {
+    public void removeField(int index, String name) {
         panel.removeField(index);
-        form.removeField(index);
+        form.removeField(name);
     }
-    public void replace(Component component, int index, Characteristic<?> characteristic, int componentIndex) {
+    public void replace(Component component, int index, Characteristic<?> characteristic, int componentIndex, String name) {
         panel.replace(component, index, componentIndex);
-        form.changeField(index, characteristic);
+        form.changeValue(name, characteristic);
     }
     public int getLength() {
         return panel.getLength();
     }
-    public void add(MOField field, NamedCharacteristic characteristic) {
+    public void add(MOField field, Characteristic<?> characteristic, String name) {
         panel.addField(field);
-        form.addField(characteristic);
+        form.addValue(name, characteristic);
         System.out.println(form);
     }
 }

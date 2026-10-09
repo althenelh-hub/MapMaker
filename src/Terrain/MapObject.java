@@ -1,15 +1,13 @@
 package Terrain;
 
-import Data.Characteristic;
-import Data.Form;
-import Data.NamedCharacteristic;
-import Data.StringReceiver;
+import Data.*;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class MapObject {
     public String name;
-    protected boolean modifiable;
+    //protected boolean modifiable;
     protected HashMap<String, Characteristic<?>> values;
     public MapObject() {
         values = new HashMap<>();
@@ -31,9 +29,4 @@ public class MapObject {
         }
     }
 
-    public void shareValues(Form form) {
-        for(String s : values.keySet()) {
-            form.addField(new NamedCharacteristic(new StringReceiver(s), values.get(s)));
-        }
-    }
 }

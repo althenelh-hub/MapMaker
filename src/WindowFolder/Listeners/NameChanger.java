@@ -14,14 +14,10 @@ public class NameChanger {
     }
 
     public void changeName(ActionEvent e) {
-        if(modifier.isModifiable()) {
-            JTextField field = new JTextField();
-            String nextName = field.getText();
-            modifier.changeCharacteristicName(oldName, nextName);
-            oldName = nextName;
-        }
-        else {
+        JTextField field = (JTextField)e.getSource();
+        String nextName = field.getText();
+        modifier.changeCharacteristicName(oldName, nextName);
+        oldName = nextName;
 
-        }
     }
 }
