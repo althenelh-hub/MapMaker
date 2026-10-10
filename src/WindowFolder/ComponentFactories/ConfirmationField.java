@@ -9,8 +9,8 @@ import java.util.*;
 public class ConfirmationField extends JTextField {
     boolean changed;
     String lastText;
-    ArrayList<InputChecker> checkers;
-    ArrayList<ActionStrategy> strategies;
+    ArrayList<InputChecker> checkers = new ArrayList<>();
+    ArrayList<ActionStrategy> strategies = new ArrayList<>();
     Color confirmColor;
     Color changedColor;
     public ConfirmationField(Color confirmColor, Color changedColor, String name) {
@@ -29,9 +29,13 @@ public class ConfirmationField extends JTextField {
     class ConfirmField implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             boolean formatCorrect = true;
+            String message = "";
             for(InputChecker checker : checkers) {
-                if(!checker.check(getText())) {
+                CheckMessage checkResult = checker.check(getText());
+                if(!checkResult.isValid) {
                     formatCorrect = false;
+                    message = checkResult.getError();
+                    break;
                 }
             }
             if(formatCorrect) {
@@ -41,6 +45,9 @@ public class ConfirmationField extends JTextField {
                 for(ActionStrategy strategy : strategies) {
                     strategy.realise();
                 }
+            }
+            else{
+                System.out.println(message); //temporary dialog in future
             }
         }
     }
@@ -60,5 +67,14 @@ public class ConfirmationField extends JTextField {
     }
     public void addChecker(InputChecker checker) {
         checkers.add(checker);
+    }
+    public void addCheckers(InputChecker[] checks) {
+        checkers.addAll(Arrays.asList(checks));
+    }
+    public void addActionStrategy(ActionStrategy strategy) {
+        strategies.add(strategy);
+    }
+    public void addActionStrategies(ActionStrategy[] strats) {
+        strategies.addAll(Arrays.asList(strats));
     }
 }

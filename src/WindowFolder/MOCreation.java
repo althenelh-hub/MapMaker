@@ -9,7 +9,7 @@ import java.awt.event.*;
 import Data.*;
 import Factories.MObjectAdder;
 import PaintInstructions.*;
-import WindowFolder.ComponentFactories.NamerField;
+import WindowFolder.ComponentFactories.*;
 import WindowFolder.PaintPanel.MultiPaintPanel;
 
 public class MOCreation extends JDialog {
@@ -23,9 +23,10 @@ public class MOCreation extends JDialog {
         //Dialog settings
         //Name field and finishAction
         JLabel name = new JLabel("Name:");
-        StringReceiver mObjectName = new StringReceiver();
-        JTextField field = new NamerField(mObjectName);
+        String mObjectName = "";
+        ConfirmationField field = new ConfirmationField(Color.WHITE, Color.ORANGE, mObjectName);
         Form form = new Form(mObjectName);
+        field.addActionStrategy(new UpdateValueAction(form, field));
         JPanel namePanel = new JPanel();
         namePanel.add(name);
         namePanel.add(field);
@@ -53,6 +54,19 @@ public class MOCreation extends JDialog {
         paintPanel.setInstruction(formManager.getForm("Forest"));
         ChooseColor chooseColor = new ChooseColor(paintPanel);
         MObjectBox box = new MObjectBox(mObjectAdder, paintPanel , link,  currentFactoryName);
+        field.addCheckers(new InputChecker[]{new NameFormatChecker(), new InputChecker() {
+            @Override
+            public CheckMessage check(String value) {
+                CheckMessage message = new CheckMessage(true, "");
+                if(mObjectAdder.contains(box.getItemAt(box.getSelectedIndex()), field.getText())) {
+                    message.setValidation(false);
+                    message.setError("Name: " + field.getText() + " already exists.");
+                }
+                return message;
+
+            }
+        }});
+
         FinishAction finishAction = new FinishAction(mObjectAdder, form, paintAdder, formManager, pane, box.getHolder());
         JButton finish = new JButton();
         finish.addActionListener(finishAction);

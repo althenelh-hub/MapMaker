@@ -3,7 +3,7 @@ package WindowFolder;
 import Data.*;
 import Data.Characteristics.Characteristic;
 import Data.Characteristics.CharacteristicFactory;
-import WindowFolder.ComponentFactories.ConfirmationField;
+import WindowFolder.ComponentFactories.*;
 import WindowFolder.Listeners.RemoveFromString;
 import WindowFolder.Listeners.*;
 
@@ -11,8 +11,6 @@ import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MObjectData<T extends InfoModifier> {
     T modifier;
@@ -27,8 +25,7 @@ public class MObjectData<T extends InfoModifier> {
         createField(characteristic, "");
     }
     public void createField(Characteristic<?> characteristic, String characteristicName) {
-        JTextField label = new JTextField(characteristicName);
-
+        ConfirmationField label = new ConfirmationField(Color.WHITE, Color.ORANGE, characteristicName);
         label.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
@@ -39,9 +36,10 @@ public class MObjectData<T extends InfoModifier> {
         UpdatableChangeView view = new UpdatableChangeView(changeView);
         RemoveFromString removeString = new RemoveFromString(modifier, label.getText());
         UpdatableRemoveFromString removeFromString = new UpdatableRemoveFromString(removeString);
-        label.addActionListener(new UpdateFieldName(label.getText(), modifier));
-        label.addActionListener(new UpdateValue(removeFromString));
-        label.addActionListener(new UpdateValue(view));
+
+        label.addActionStrategies(new ActionStrategy[]{new UpdateNameAction(modifier, label.getText(), label),
+                new UpdateValueAction(removeFromString, label), new UpdateValueAction(view, label)});
+        label.addCheckers(new InputChecker[]{new NameFormatChecker(), new ContainsCheck(modifier)});
         JButton button = new JButton();
         button.addActionListener(removeString);
         button.addActionListener(new RemoveIndex(panel, panel.getLength()));

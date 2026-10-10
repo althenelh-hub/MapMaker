@@ -2,18 +2,22 @@ package Data;
 
 import Data.Characteristics.Characteristic;
 import Terrain.MapObject;
+import WindowFolder.Receiver;
 
 import java.util.HashMap;
 
-public class Form implements InfoModifier {
-    StringReceiver name;
+public class Form implements InfoModifier, Receiver<String> {
+    String name;
     HashMap<String, Characteristic<?>> characteristics;
-    public Form(StringReceiver name) {
+    public Form(String name) {
         this.name = name;
         characteristics = new HashMap<>();
     }
+    public void receive(String value) {
+        name = value;
+    }
     public String getName() {
-        return name.text;
+        return name;
     }
     public void fillMapObject(MapObject MObject) {
         for(String s : characteristics.keySet()){

@@ -1,5 +1,6 @@
 package Data.Characteristics;
 
+import WindowFolder.ComponentFactories.ActionStrategy;
 import WindowFolder.ComponentFactories.ConfirmationField;
 import WindowFolder.FormatChecker;
 
@@ -14,25 +15,21 @@ public class IntegerCharacteristic extends Characteristic<Integer> {
         value = 0;
     }
     public JTextField display() {
-        JTextField textField = new ConfirmationField(Color.WHITE, Color.ORANGE);
-        textField.addActionListener(new IntegerSetter(this));
+        ConfirmationField textField = new ConfirmationField(Color.WHITE, Color.ORANGE);
+        textField.addActionStrategy(new IntegerSetter(this, textField));
         textField.setText(value+"");
         return textField;
     }
 
 }
-class IntegerSetter implements ActionListener {
+class IntegerSetter implements ActionStrategy {
     Characteristic<Integer> characteristic;
-    public IntegerSetter(Characteristic<Integer> characteristic) {
+    JTextField field;
+    public IntegerSetter(Characteristic<Integer> characteristic, JTextField field) {
+        this.field = field;
         this.characteristic = characteristic;
     }
-    public void actionPerformed(ActionEvent e) {
-        JTextField field = (JTextField)e.getSource();
-        FormatChecker checker = new FormatChecker();
-        String text = field.getText();
-        if(checker.checkOnDigits(text)) {
-            characteristic.setValue(Integer.parseInt(text));
-        }
-
+    public void realise() {
+        characteristic.setValue(Integer.parseInt(field.getText()));
     }
 }

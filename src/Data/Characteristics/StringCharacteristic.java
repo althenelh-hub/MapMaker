@@ -1,5 +1,6 @@
 package Data.Characteristics;
 
+import WindowFolder.ComponentFactories.ActionStrategy;
 import WindowFolder.ComponentFactories.ConfirmationField;
 import WindowFolder.FormatChecker;
 
@@ -12,26 +13,21 @@ public class StringCharacteristic extends Characteristic<String> {
         value = "";
     }
     public JTextField display() {
-        JTextField field = new ConfirmationField(Color.WHITE, Color.ORANGE);
-        field.addActionListener(new StringSetter(this));
+        ConfirmationField field = new ConfirmationField(Color.WHITE, Color.ORANGE);
+        field.addActionStrategy(new StringSetter(this, field));
         field.setText(value);
         return field;
     }
 }
-class StringSetter implements ActionListener {
+class StringSetter implements ActionStrategy {
     Characteristic<String> characteristic;
-    public StringSetter(Characteristic<String> characteristic) {
+    JTextField field;
+    public StringSetter(Characteristic<String> characteristic, JTextField field) {
+        this.field = field;
         this.characteristic = characteristic;
 
     }
-    public void actionPerformed(ActionEvent e) {
-
-        JTextField field = (JTextField) e.getSource();
-        String text = field.getText();
-        FormatChecker checker = new FormatChecker();
-        if (checker.checkPureLetters(text)) {
-            characteristic.setValue(text);
-        }
-
+    public void realise() {
+        characteristic.setValue(field.getText());
     }
 }

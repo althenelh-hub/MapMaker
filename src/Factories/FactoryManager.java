@@ -21,6 +21,12 @@ public class FactoryManager implements MObjectAdder, MObjectChanger, MObjectInje
         currentFactory = factories.get(factoryName);
         currentFactory.change(mObjectName);
     }
+
+    @Override
+    public boolean contains(String factoryName, String mObjectName) {
+        return getFactory(factoryName).mapObjects.containsKey(mObjectName);
+    }
+
     public void store(String name, Form form) {
         getFactory(name).store(form);
     }
