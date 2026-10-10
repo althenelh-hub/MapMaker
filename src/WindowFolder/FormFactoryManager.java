@@ -1,8 +1,7 @@
 package WindowFolder;
 
-import Data.Form;
-import PaintInstructions.PaintForm;
-import PaintInstructions.PaintFormFactory;
+import PaintInstructions.PaintForms.PaintForm;
+import PaintInstructions.PaintForms.PaintFormFactory;
 
 import java.awt.*;
 import java.util.*;

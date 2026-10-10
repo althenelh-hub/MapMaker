@@ -10,6 +10,7 @@ import Data.*;
 import Factories.MObjectAdder;
 import PaintInstructions.*;
 import WindowFolder.ComponentFactories.NamerField;
+import WindowFolder.PaintPanel.MultiPaintPanel;
 
 public class MOCreation extends JDialog {
 
@@ -49,7 +50,7 @@ public class MOCreation extends JDialog {
         JPanel previewAndMode = new JPanel();
         FormManager formManager = formFactoryManager.createFormManager();
         MultiPaintPanel paintPanel = new MultiPaintPanel(formManager, new Point(100,100));
-        paintPanel.instruction = formManager.getForm("Forest");
+        paintPanel.setInstruction(formManager.getForm("Forest"));
         ChooseColor chooseColor = new ChooseColor(paintPanel);
         MObjectBox box = new MObjectBox(mObjectAdder, paintPanel , link,  currentFactoryName);
         FinishAction finishAction = new FinishAction(mObjectAdder, form, paintAdder, formManager, pane, box.getHolder());

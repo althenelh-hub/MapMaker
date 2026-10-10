@@ -1,6 +1,8 @@
-package PaintInstructions;
+package PaintInstructions.PaintForms;
+import PaintInstructions.PaintInstructionV2;
+
 import java.awt.*;
-public abstract class PaintForm implements PaintInstructionV2{
+public abstract class PaintForm implements PaintInstructionV2 {
     protected Color color;
     public void fulfill(Graphics g, Rectangle rectangle) {
         g.setColor(color);

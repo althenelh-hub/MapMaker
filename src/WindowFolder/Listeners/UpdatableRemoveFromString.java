@@ -1,6 +1,5 @@
 package WindowFolder.Listeners;
 
-import WindowFolder.ChangeValue;
 import WindowFolder.Receiver;
 
 public class UpdatableRemoveFromString implements Receiver<String> {
@@ -11,7 +10,5 @@ public class UpdatableRemoveFromString implements Receiver<String> {
     public void receive(String s) {
         removeString.name = s;
     }
-    public RemoveFromString getRemoveString() {
-        return removeString;
-    }
+
 }

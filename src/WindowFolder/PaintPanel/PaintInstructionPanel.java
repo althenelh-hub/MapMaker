@@ -1,9 +1,7 @@
-package WindowFolder;
+package WindowFolder.PaintPanel;
 
-import PaintInstructions.PaintImageV2;
 import PaintInstructions.PaintInstructionV2;
 import java.awt.*;
-import javax.swing.*;
 
 public class PaintInstructionPanel extends PaintPanel<PaintInstructionV2> {
     public PaintInstructionPanel(PaintInstructionV2 instruction, Point size) {

@@ -1,9 +1,7 @@
 package Factories;
 
-import Data.Characteristic;
 import Data.Form;
 import Data.MapData;
-import Terrain.Faction;
 import Terrain.Unit;
 import WindowFolder.Keeper;
 
@@ -22,9 +20,6 @@ public class UnitFactory extends Factory<Unit> {
         System.out.println(faction.getValue());
         unit.setFaction(faction.getValue());
         data.putUnit(point, unit);
-    }
-    public boolean check(Point point, MapData data) {
-        return data.containsUnit(point);
     }
     public String toString() {
         return "Unit";

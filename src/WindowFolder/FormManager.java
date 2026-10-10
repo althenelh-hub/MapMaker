@@ -1,6 +1,6 @@
 package WindowFolder;
 
-import PaintInstructions.PaintForm;
+import PaintInstructions.PaintForms.PaintForm;
 
 import java.util.HashMap;
 

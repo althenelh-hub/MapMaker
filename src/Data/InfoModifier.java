@@ -1,8 +1,8 @@
 package Data;
 
+import Data.Characteristics.Characteristic;
 import WindowFolder.ComponentFactories.RemoveStringStorage;
 
-import java.util.Set;
 
 public interface InfoModifier extends RemoveStringStorage {
     void changeCharacteristicName(String name, String nextName);

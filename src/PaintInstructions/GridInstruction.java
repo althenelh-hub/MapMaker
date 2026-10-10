@@ -37,22 +37,5 @@ public class GridInstruction implements PaintInstructionV2 { //think about savin
         }
 
     }
-    public void setCellSize(int cellSize) {
-        this.cellSize = cellSize;
-    }
-    public void setColumns(int columns) {
-        this.columns = columns;
-    }
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-    public void setLineWidth(int width) {
-        lineWidth = width;
-    }
-    public void setCellColor(Color color) {
-        cellColor = color;
-    }
-    public void setLineColor(Color color) {
-        lineColor = color;
-    }
+
 }

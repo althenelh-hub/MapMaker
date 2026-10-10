@@ -9,12 +9,17 @@ public class PaintImageV2 implements PaintInstructionV2 {
         this.image = image;
     }
     public void fulfill(Graphics g, Rectangle target) {
+        System.out.println("Size" + size);
+
         g.drawImage(image, target.x, target.y, size.x+ target.x,size.y+ target.y,
                 0,0,size.x,size.y, null);
     }
     public void changeSize(Point offset) {
-        size.x+=offset.x;
-        size.y+=offset.y;
+        size.x=offset.x;
+        size.y=offset.y;
+    }
+    public Point getSize() {
+        return size;
     }
     public int getWidth() {
         return size.x;

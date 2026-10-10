@@ -1,10 +1,7 @@
 package WindowFolder;
 
-import Data.Characteristic;
+import Data.Characteristics.Characteristic;
 import Data.InfoModifier;
-import Data.InfoStorage;
-import Data.NamedCharacteristic;
-import WindowFolder.ComponentFactories.RemoveIndexStorage;
 
 import java.awt.*;
 

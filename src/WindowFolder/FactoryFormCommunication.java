@@ -1,13 +1,9 @@
 package WindowFolder;
 
-import Data.Form;
 import Factories.Factory;
 import Factories.FactoryManager;
 import Factories.Filler;
-import PaintInstructions.PaintForm;
-import PaintInstructions.PaintFormFactory;
-
-import java.util.HashMap;
+import PaintInstructions.PaintForms.PaintFormFactory;
 
 public class FactoryFormCommunication {
     FactoryFiller factoryFiller;

@@ -1,6 +1,5 @@
 package WindowFolder;
 
-import java.awt.*;
 
 public class Keeper<T> {
     protected T value;

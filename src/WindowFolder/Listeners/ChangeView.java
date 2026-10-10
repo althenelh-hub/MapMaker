@@ -1,7 +1,7 @@
 package WindowFolder.Listeners;
 
-import Data.Characteristic;
-import Data.CharacteristicFactory;
+import Data.Characteristics.Characteristic;
+import Data.Characteristics.CharacteristicFactory;
 import Data.DisplayItem;
 import Data.InfoModifier;
 import WindowFolder.MOManagePanel;

@@ -1,4 +1,4 @@
-package WindowFolder;
+package WindowFolder.PaintPanel;
 
 import PaintInstructions.PaintInstructionV2;
 import javax.swing.*;

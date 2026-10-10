@@ -49,6 +49,7 @@ public class MapGrid {
         return cellSize;
     }
     public int getLineWidth() {return lineWidth;}
+    public int getFullCellSize() {return cellSize+lineWidth;}
     public Point getStartingPoint() {return startingPoint;}
     public void setColumns(int columns) {
         this.columns = columns;
@@ -65,6 +66,12 @@ public class MapGrid {
     public void setStartingPoint(Point p) {
         startingPoint.x = p.x;
         startingPoint.y = p.y;
+    }
+    public void addColumn() {
+        columns++;
+    }
+    public void addRows() {
+        rows++;
     }
     public void reshape(Rectangle parent) {
         startingPoint.x = (parent.width-getWidth())/2;

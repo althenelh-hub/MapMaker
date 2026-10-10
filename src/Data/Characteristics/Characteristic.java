@@ -1,10 +1,6 @@
-package Data;
-
-
-import WindowFolder.DisplayMethod;
+package Data.Characteristics;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 
 public abstract class Characteristic<T> {
     protected T value;

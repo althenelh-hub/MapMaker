@@ -1,6 +1,5 @@
 package Listeners;
 
-import Data.MapData;
 import WindowFolder.MapGrid;
 
 import java.awt.*;

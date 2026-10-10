@@ -1,10 +1,6 @@
 package Listeners;
-import Data.CellData;
-import Factories.Factory;
-import Factories.FactoryManager;
 import Factories.MObjectInjector;
 import PaintInstructions.*;
-import Terrain.MapObject;
 import WindowFolder.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -18,10 +14,10 @@ public class CoordinateListener implements MouseListener { //TilePainter
     MObjectInjector injector;
     MObjectShow show;
     public CoordinateListener(BufferedQueuedPanelV2 target, MapGrid mapGrid, MObjectInjector injector,
-                              PaintInjector paintInjector, MObjectShow show) {
+                              PaintInjector paintInjector, MObjectShow show, MapData data) {
         target.setMouseListener(this);
         this.mapGrid = mapGrid;
-        mapData = new MapData(mapGrid.getColumnsCount(), mapGrid.getRowsCount());
+        mapData = data;
         this.paintInjector = paintInjector;
         this.injector = injector;
         this.show = show;
@@ -54,11 +50,4 @@ public class CoordinateListener implements MouseListener { //TilePainter
         injector.put(cell, mapData);
         paintInjector.paintForm(mapData.getCellData(cell), rect);
     }
-    public void updateCell() {
-
-    }
-    public void removeElement(Point p, String name) {
-
-    }
-
 }

@@ -1,10 +1,8 @@
-package WindowFolder;
+package WindowFolder.PaintPanel;
 
 import PaintInstructions.*;
 
-import java.awt.image.BufferedImage;
 import java.util.*;
-import javax.swing.*;
 import java.awt.*;
 public class BufferCommunication extends PaintPanel<PaintInstructionV2> {
     ArrayList<PaintInstructionV2> instructions = new ArrayList<>();
@@ -17,18 +15,21 @@ public class BufferCommunication extends PaintPanel<PaintInstructionV2> {
     }
     public void paintInstruction(Graphics g) {
         if(instructions.isEmpty()) {
+            System.out.println(paintArea);
             super.paintInstruction(g);
         }
         else {
             for(PaintInstructionV2 p : instructions) {
+                System.out.println("PaintArea: " + g.getClipBounds());
+                System.out.println("Current area: " + currentArea);
                 p.fulfill(g, currentArea);
             }
             instructions.clear();
         }
     }
     public void changeSize(Point point) {
-        paintArea.width += point.x;
-        paintArea.height += point.y;
+        paintArea.width = point.x;
+        paintArea.height = point.y;
         setStartingPoint();
     }
     public void put(ArrayList<PaintInstructionV2> instructions, Rectangle Area) {

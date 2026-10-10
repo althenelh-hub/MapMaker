@@ -1,11 +1,12 @@
-package WindowFolder;
+package WindowFolder.PaintPanel;
 
-import PaintInstructions.PaintForm;
+import PaintInstructions.PaintForms.PaintForm;
+import WindowFolder.FormManager;
+import WindowFolder.Receiver;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class MultiPaintPanel extends PaintPanel<PaintForm> implements Receiver<Color>{
+public class MultiPaintPanel extends PaintPanel<PaintForm> implements Receiver<Color> {
     FormManager formManager;
     public MultiPaintPanel(FormManager formManager, Point size) {
         super(size);

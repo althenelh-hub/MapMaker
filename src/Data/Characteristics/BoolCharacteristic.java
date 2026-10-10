@@ -1,4 +1,4 @@
-package Data;
+package Data.Characteristics;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

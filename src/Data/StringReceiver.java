@@ -7,13 +7,7 @@ public class StringReceiver implements Namable {
     public StringReceiver(){
 
     }
-    public StringReceiver(String name) {
-        text = name;
-    }
     public void giveName(String text) {
         this.text = text;
-    }
-    public String getText() {
-        return text;
     }
 }

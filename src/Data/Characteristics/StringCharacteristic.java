@@ -1,4 +1,4 @@
-package Data;
+package Data.Characteristics;
 
 import WindowFolder.InputChecker;
 

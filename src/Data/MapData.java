@@ -18,11 +18,25 @@ public class MapData {
     public boolean containsUnit (Point p) {
         return units.containsKey(p);
     }
+    public void reshape(int x, int y) {
+        Terrain[][] nextMap = new Terrain[x][y];
+        int xSize = Math.min(nextMap.length, terrainMap.length);
+        int ySize = Math.min(nextMap[0].length, terrainMap[0].length);
+        for(int i = 0;i < xSize;i++) {
+            for(int j = 0;j < ySize;j++) {
+                nextMap[i][j] = terrainMap[i][j];
+            }
+        }
+        terrainMap = nextMap;
+    }
     public CellData getCellData(Point p) {
         CellData data = new CellData();
         ArrayList<String> names = new ArrayList<>();
         if(containsTerrain(p)) {
             names.add(terrainMap[p.x][p.y].name);
+        }
+        else {
+            names.add("baseTerrain");
         }
         if(containsUnit(p)) {
             names.add(units.get(p).name);
@@ -39,8 +53,5 @@ public class MapData {
         System.out.println("Inside MapData: " + terrain);
         terrainMap[point.x][point.y] = terrain;
         System.out.println("Inside MapData: " + terrainMap[point.x][point.y]);
-    }
-    public Unit getUnit(Point coordinate) {
-        return units.getOrDefault(coordinate, null);
     }
 }

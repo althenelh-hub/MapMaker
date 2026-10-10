@@ -31,7 +31,5 @@ public class DialogManager {
             dialog.requestFocus();
         }
     }
-    public void start() {
 
-    }
 }

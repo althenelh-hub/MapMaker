@@ -1,9 +1,8 @@
 package Terrain;
 
-import Data.*;
+import Data.Characteristics.Characteristic;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class MapObject {
     public String name;

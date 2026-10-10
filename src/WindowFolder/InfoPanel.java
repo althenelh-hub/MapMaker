@@ -1,16 +1,17 @@
 package WindowFolder;
 
 import Data.*;
+import Data.Characteristics.Characteristic;
+import Data.Characteristics.IntegerCharacteristic;
 import Terrain.MapObject;
 import WindowFolder.ComponentFactories.RemoveStringStorage;
-import WindowFolder.Listeners.NameChanger;
 import WindowFolder.Listeners.RemoveFromString;
 import WindowFolder.Listeners.RemoveIndex;
 import WindowFolder.Listeners.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
-import java.awt.event.*;
+
 public class InfoPanel extends JPanel {
     MObjectFiller filler = new MObjectFiller();
     MOManagePanel panel = new MOManagePanel();

@@ -1,6 +1,8 @@
 package WindowFolder;
 import java.awt.image.*;
 import PaintInstructions.*;
+import WindowFolder.PaintPanel.BufferCommunication;
+
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;

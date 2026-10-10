@@ -1,10 +1,9 @@
 package Data;
 
+import Data.Characteristics.Characteristic;
 import Terrain.MapObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public class Form implements InfoModifier {
     StringReceiver name;
@@ -30,17 +29,9 @@ public class Form implements InfoModifier {
         System.out.println(nextName + " " + characteristics.get(nextName));
     }
 
-    public NamedCharacteristic createField() {
-        return new NamedCharacteristic(new IntegerCharacteristic());
-    }
+
     public void changeValue(String name, Characteristic<?> characteristic) {
         characteristics.replace(name, characteristic);
-    }
-    public Set<String> getKeySet() {
-        return characteristics.keySet();
-    }
-    public void setStringReceiver(StringReceiver receiver) {
-        this.name = receiver;
     }
     public void emptyFields() {
         characteristics.clear();

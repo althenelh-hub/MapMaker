@@ -22,8 +22,4 @@ public class ForestFactory extends Factory<Terrain>{
     public String toString() {
         return "Forest";
     }
-    public boolean check(Point point, MapData mapData) {
-        return mapData.containsTerrain(point);
-    }
-
 }

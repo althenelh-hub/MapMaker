@@ -1,16 +1,13 @@
 package WindowFolder;
 
 import Data.*;
-import WindowFolder.ComponentFactories.NamerField;
-import WindowFolder.ComponentFactories.RemoveButton;
-import WindowFolder.Listeners.CharacteristicName;
+import Data.Characteristics.Characteristic;
+import Data.Characteristics.CharacteristicFactory;
 import WindowFolder.Listeners.RemoveFromString;
 import WindowFolder.Listeners.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MObjectData<T extends InfoModifier> {
     T modifier;

@@ -43,9 +43,6 @@ public class FactoryManager implements MObjectAdder, MObjectChanger, MObjectInje
     public String getCurrentName() {
         return currentFactory.getName();
     }
-    public Factory<?> getCurrent() {
-        return currentFactory;
-    }
     public MapObject getCurrentMapObject() {
         return currentFactory.currentMapObject;
     }

@@ -1,4 +1,4 @@
-package PaintInstructions;
+package PaintInstructions.PaintForms;
 
 import java.awt.*;
 
