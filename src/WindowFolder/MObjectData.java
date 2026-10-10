@@ -3,11 +3,16 @@ package WindowFolder;
 import Data.*;
 import Data.Characteristics.Characteristic;
 import Data.Characteristics.CharacteristicFactory;
+import WindowFolder.ComponentFactories.ConfirmationField;
 import WindowFolder.Listeners.RemoveFromString;
 import WindowFolder.Listeners.*;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MObjectData<T extends InfoModifier> {
     T modifier;
@@ -23,6 +28,13 @@ public class MObjectData<T extends InfoModifier> {
     }
     public void createField(Characteristic<?> characteristic, String characteristicName) {
         JTextField label = new JTextField(characteristicName);
+
+        label.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+
+            }
+        });
         ChangeView changeView = new ChangeView(modifier, label.getText(), panel, panel.getLength());
         UpdatableChangeView view = new UpdatableChangeView(changeView);
         RemoveFromString removeString = new RemoveFromString(modifier, label.getText());

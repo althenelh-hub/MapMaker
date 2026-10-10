@@ -16,14 +16,14 @@ public class GameObjectPanel extends JTabbedPane {
     MObjectChanger changer;
     PaintChanger paintChanger;
     Keeper<String> factionLink;
-    MObjectShow mObjectShow;
+    MObjectDisplayControl control;
     public GameObjectPanel(MObjectChanger changer, PaintChanger paintChanger, DialogManager dialogManager,
-                           Keeper<String> factionLink, MObjectShow mObjectShow) {
+                           Keeper<String> factionLink, MObjectDisplayControl control) {
         this.dialogManager = dialogManager;
         this.changer = changer;
         this.paintChanger = paintChanger;
         this.factionLink = factionLink;
-        this.mObjectShow = mObjectShow;
+        this.control = control;
         String[] factoryNames = changer.getFactoryNames();
         for(String s : factoryNames) {
             JPanel panel = new JPanel();
@@ -31,10 +31,10 @@ public class GameObjectPanel extends JTabbedPane {
             //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         }
         JComponentFiller filler = new JComponentFiller();
-        filler.fillButtons(changer, getCurrentTitle(), getCurrentPanel(), paintChanger, factionLink, mObjectShow);
+        filler.fillButtons(changer, getCurrentTitle(), getCurrentPanel(), paintChanger, factionLink, control);
         filler.addButton(this);
         addChangeListener(new DisplayCreationButton(this));
-        addChangeListener(new DisplayMObjects(changer, paintChanger, factionLink, mObjectShow));
+        addChangeListener(new DisplayMObjects(changer, paintChanger, factionLink, control));
     }
     public void updateButtons(String createdName) {
         if(getTitleAt(getSelectedIndex()).equals(createdName)) {
@@ -42,7 +42,7 @@ public class GameObjectPanel extends JTabbedPane {
             JComponentFiller filler = new JComponentFiller();
             JComponent component = getCurrentPanel();
             component.removeAll();
-            filler.fillButtons(changer, getCurrentTitle(),component, paintChanger, factionLink, mObjectShow);
+            filler.fillButtons(changer, getCurrentTitle(),component, paintChanger, factionLink, control);
             filler.addButton(this);
             component.revalidate();
             component.repaint();
@@ -58,7 +58,7 @@ public class GameObjectPanel extends JTabbedPane {
 
 class JComponentFiller {
     public void fillButtons(MObjectChanger changer, String factoryName, JComponent target, PaintChanger paintChanger,
-                            Keeper<String> factionName, MObjectShow mObjectShow) {
+                            Keeper<String> factionName, MObjectDisplayControl mObjectShow) {
         String[] names = changer.getMObjectNames(factoryName);
         target.removeAll();
         for(String s : names) {
@@ -141,8 +141,9 @@ class DisplayMObjects implements ChangeListener {
     MObjectChanger changer;
     PaintChanger painter;
     Keeper<String> factionLink;
-    MObjectShow mObjectShow;
-    public DisplayMObjects(MObjectChanger changer, PaintChanger painter, Keeper<String> factionLink, MObjectShow mObjectShow) {
+    MObjectDisplayControl mObjectShow;
+    public DisplayMObjects(MObjectChanger changer, PaintChanger painter, Keeper<String> factionLink,
+                           MObjectDisplayControl mObjectShow) {
         this.changer = changer;
         this.painter = painter;
         this.factionLink = factionLink;
@@ -161,9 +162,9 @@ class SetMObject implements ActionListener {
     String factoryName;
     String MObjectName;
     PaintChanger paintChanger;
-    MObjectShow mObjectShow;
+    MObjectDisplayControl mObjectShow;
     public SetMObject(MObjectChanger changer, String factoryName, String MObjectName, PaintChanger paintChanger,
-                      MObjectShow mObjectShow) {
+                      MObjectDisplayControl mObjectShow) {
         this.changer = changer;
         this.factoryName = factoryName;
         this.MObjectName = MObjectName;
@@ -172,8 +173,10 @@ class SetMObject implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
         changer.changeFactory(factoryName, MObjectName);
-        mObjectShow.show(changer.getCurrentMapObject());
+        mObjectShow.displayMObjects(new MapObject[]{changer.getCurrentMapObject()});
         paintChanger.setCurrentForm(MObjectName);
+        mObjectShow.revalidate();
+        mObjectShow.repaint();
     }
 }
 

@@ -18,7 +18,7 @@ public class SizePanel extends JPanel {
         columnController.addListeners(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                InputChecker checker = new InputChecker();
+                FormatChecker checker = new FormatChecker();
                 String text = columnController.field.getText();
                 if(checker.checkOnDigits(text)) {
                     control.addColumns(Integer.parseInt(text));
@@ -35,7 +35,7 @@ public class SizePanel extends JPanel {
         rowController.addListeners(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                InputChecker checker = new InputChecker();
+                FormatChecker checker = new FormatChecker();
                 String text = rowController.field.getText();
                 if(checker.checkOnDigits(text)) {
                     control.addRows(Integer.parseInt(text));
@@ -52,7 +52,7 @@ public class SizePanel extends JPanel {
         cellSizeController.addListeners(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                InputChecker checker = new InputChecker();
+                FormatChecker checker = new FormatChecker();
                 String text = cellSizeController.field.getText();
                 if(checker.checkOnDigits(text)) {
                     mapControl.changeCellSize(Integer.parseInt(text));

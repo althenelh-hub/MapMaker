@@ -2,7 +2,6 @@ package WindowFolder;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,7 +15,7 @@ public class SizeController {
         field.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                InputChecker checker = new InputChecker();
+                FormatChecker checker = new FormatChecker();
                 String text = field.getText();
                 if(checker.checkOnDigits(text)) {
                     slider.setValue(Integer.parseInt(text));

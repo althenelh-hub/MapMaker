@@ -1,8 +1,10 @@
 package Data.Characteristics;
 
-import WindowFolder.InputChecker;
+import WindowFolder.ComponentFactories.ConfirmationField;
+import WindowFolder.FormatChecker;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,8 +14,9 @@ public class IntegerCharacteristic extends Characteristic<Integer> {
         value = 0;
     }
     public JTextField display() {
-        JTextField textField = new JTextField();
+        JTextField textField = new ConfirmationField(Color.WHITE, Color.ORANGE);
         textField.addActionListener(new IntegerSetter(this));
+        textField.setText(value+"");
         return textField;
     }
 
@@ -25,7 +28,7 @@ class IntegerSetter implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
         JTextField field = (JTextField)e.getSource();
-        InputChecker checker = new InputChecker();
+        FormatChecker checker = new FormatChecker();
         String text = field.getText();
         if(checker.checkOnDigits(text)) {
             characteristic.setValue(Integer.parseInt(text));

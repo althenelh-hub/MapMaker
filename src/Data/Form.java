@@ -20,7 +20,9 @@ public class Form implements InfoModifier {
             MObject.addValue(s, characteristics.get(s));
         }
     }
-
+    public boolean contains(String key) {
+        return characteristics.containsKey(key);
+    }
     @Override
     public void changeCharacteristicName(String name, String nextName) {
         Characteristic<?> characteristic = characteristics.get(name);

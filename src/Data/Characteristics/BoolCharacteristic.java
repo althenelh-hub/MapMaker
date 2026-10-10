@@ -12,6 +12,7 @@ public class BoolCharacteristic extends Characteristic<Boolean> {
     public JCheckBox display() {
         JCheckBox checkBox = new JCheckBox();
         checkBox.addActionListener(new BoolSetter(this));
+        checkBox.setSelected(value);
         return checkBox;
     }
 }

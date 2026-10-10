@@ -1,7 +1,7 @@
 package WindowFolder.Listeners;
 
 import WindowFolder.ComponentFactories.Namable;
-import WindowFolder.InputChecker;
+import WindowFolder.FormatChecker;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +14,7 @@ public class CharacteristicName implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
         String text = ((JTextField)e.getSource()).getText();
-        InputChecker checker = new InputChecker();
+        FormatChecker checker = new FormatChecker();
         if(checker.checkPureLetters(text)) {
             System.out.println(text);
             System.out.println("Name is set");

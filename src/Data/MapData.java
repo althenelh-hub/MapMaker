@@ -29,6 +29,9 @@ public class MapData {
         }
         terrainMap = nextMap;
     }
+    public Unit getUnit(Point p) {
+        return units.get(p);
+    }
     public CellData getCellData(Point p) {
         CellData data = new CellData();
         ArrayList<String> names = new ArrayList<>();

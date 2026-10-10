@@ -41,12 +41,12 @@ public class Window extends JFrame {
         FactoryManager factoryManager = communication.getFactoryManager();
         Painter painter = new Painter(bufferedPanel);
         DialogManager dialogManager = new DialogManager(communication.getFormFactoryManager(), factoryManager, painter);
-        MObjectShow mObjectShow = new MObjectShow();
-        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager, painter, mObjectShow, data);
+        MObjectDisplayControl displayControl = new MObjectDisplayControl(new JPanel());
+        CoordinateListener listener = new CoordinateListener(bufferedPanel, mapGrid, factoryManager, painter, displayControl, data);
         GameObjectPanel gameObjectPanel = new GameObjectPanel(factoryManager, painter, dialogManager, unitFactory.getFaction(),
-                mObjectShow);
+                displayControl);
         add(gameObjectPanel, BorderLayout.WEST);
-        add(mObjectShow.getMainPanel(), BorderLayout.EAST);
+        add(displayControl, BorderLayout.EAST);
         MapControl mapControl = new MapControl(mapSave, paintPanel, mapGrid, imageInstruction, data, painter);
         SizePanel sizePanel = new SizePanel(10, 10,20, mapControl);
         add(sizePanel, BorderLayout.SOUTH);

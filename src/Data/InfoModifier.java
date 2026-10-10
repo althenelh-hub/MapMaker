@@ -9,5 +9,6 @@ public interface InfoModifier extends RemoveStringStorage {
     void addValue(String name, Characteristic<?> characteristic);
     void removeField(String name);
     void changeValue(String name, Characteristic<?> characteristic);
+    boolean contains(String name);
     void emptyFields();
 }

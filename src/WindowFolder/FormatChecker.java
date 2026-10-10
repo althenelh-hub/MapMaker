@@ -3,7 +3,7 @@ package WindowFolder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class InputChecker {
+public class FormatChecker {
     public boolean checkOnDigits(String text) {
         if (text.charAt(0) < 49 && text.length()>1 || text.charAt(0) > 58) {
             System.out.println("Wrong first");

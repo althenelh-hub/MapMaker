@@ -52,27 +52,6 @@ public class InfoPanel extends JPanel {
 
 
 
-class MObjectFiller extends MapObject implements RemoveStringStorage, InfoModifier {
-    public Characteristic<?> getValue(String name) {
-        return values.get(name);
-    }
-    public void emptyFields() {
-        values.clear();
-    }
-    public void changeCharacteristicName(String oldName, String nextName) {
-        Characteristic<?> characteristic = values.get(oldName);
-        values.remove(oldName);
-        values.put(nextName, characteristic);
-    }
-    public void removeField(String name) {
-        values.remove(name);
-    }
-    public void changeValue(String name, Characteristic<?> characteristic) {
-        values.replace(name, characteristic);
-    }
-    public Set<String> getKeySet() {
-        return values.keySet();
-    }
-}
+
 
 

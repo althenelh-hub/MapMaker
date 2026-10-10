@@ -1,11 +1,15 @@
 package WindowFolder;
 
+import Data.Characteristics.Characteristic;
+import Data.InfoModifier;
 import Terrain.MapObject;
+import WindowFolder.ComponentFactories.RemoveStringStorage;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 
 public class MObjectShow extends MObjectData<MObjectFiller> {
     JPanel mainPanel;
@@ -30,6 +34,13 @@ public class MObjectShow extends MObjectData<MObjectFiller> {
         JButton allowChange = new JButton("Change");
         JButton confirmChange = new JButton("Confirm");
         JButton restoreValues = new JButton("Restore");
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                add();
+            }
+        });
         confirmChange.setEnabled(false);
         restoreValues.setEnabled(false);
         RestoreValues restore = new RestoreValues(this);
@@ -38,6 +49,7 @@ public class MObjectShow extends MObjectData<MObjectFiller> {
         restoreValues.addActionListener(new EnableFields(panel, false));
         restoreValues.addActionListener(new EnableComponent(confirmChange, false));
         restoreValues.addActionListener(new EnableComponent(restoreValues, false));
+        restoreValues.addActionListener(new EnableComponent(addButton, false));
 
         ChangeableUpdateMapObject transferToRestore = new ChangeableUpdateMapObject(restore, mObject);
         allowChange.addActionListener(transferToRestore);
@@ -45,17 +57,20 @@ public class MObjectShow extends MObjectData<MObjectFiller> {
         allowChange.addActionListener(new EnableComponent(restoreValues, true));
         allowChange.addActionListener(new EnableComponent(confirmChange, true));
         allowChange.addActionListener(new EnableComponent(allowChange, false));
+        allowChange.addActionListener(new EnableComponent(addButton, true));
 
         UpdateMapObject transferToAllow = new UpdateMapObject(transferToRestore, modifier);
-        confirmChange.addActionListener(transferToAllow);
+        //confirmChange.addActionListener(transferToAllow);
         confirmChange.addActionListener(new EnableComponent(allowChange, true));
         confirmChange.addActionListener(new EnableComponent(restoreValues, false));
         confirmChange.addActionListener(new EnableFields(panel, false));
         confirmChange.addActionListener(new ConfirmChange(modifier, mObject));
         confirmChange.addActionListener(new EnableComponent(confirmChange, false));
+        confirmChange.addActionListener(new EnableComponent(addButton, false));
         buttonPanel.add(allowChange);
         buttonPanel.add(confirmChange);
         buttonPanel.add(restoreValues);
+        buttonPanel.add(addButton);
     }
     public JPanel getMainPanel() {
         return mainPanel;
@@ -70,6 +85,7 @@ class ConfirmChange implements ActionListener {
         this.mObject = mObject;
     }
     public void actionPerformed(ActionEvent e) {
+        System.out.println("Filler: " + filler);
         filler.shareValues(mObject);
     }
 }
@@ -78,6 +94,7 @@ class ChangeableUpdateMapObject extends UpdateMapObject implements Receiver<MapO
         super(receiver, mObject);
     }
     public void receive(MapObject mObject) {
+        System.out.println("Inside changeable: " + mObject);
         this.mObject = mObject;
     }
 }
@@ -126,7 +143,35 @@ class RestoreValues implements ActionListener, Receiver<MapObject> {
         oldObject = value;
     }
     public void actionPerformed(ActionEvent e) {
+        System.out.println(oldObject);
         panel.show(oldObject);
+        panel.mainPanel.revalidate();
+        panel.mainPanel.repaint();
+    }
+}
+class MObjectFiller extends MapObject implements RemoveStringStorage, InfoModifier {
+    public Characteristic<?> getValue(String name) {
+        return values.get(name);
+    }
+    public void emptyFields() {
+        values.clear();
+    }
+    public void changeCharacteristicName(String oldName, String nextName) {
+        Characteristic<?> characteristic = values.get(oldName);
+        values.remove(oldName);
+        values.put(nextName, characteristic);
+    }
+    public boolean contains(String key) {
+        return values.containsKey(key);
+    }
+    public void removeField(String name) {
+        values.remove(name);
+    }
+    public void changeValue(String name, Characteristic<?> characteristic) {
+        values.replace(name, characteristic);
+    }
+    public Set<String> getKeySet() {
+        return values.keySet();
     }
 }
 

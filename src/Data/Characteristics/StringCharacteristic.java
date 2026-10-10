@@ -1,8 +1,10 @@
 package Data.Characteristics;
 
-import WindowFolder.InputChecker;
+import WindowFolder.ComponentFactories.ConfirmationField;
+import WindowFolder.FormatChecker;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 public class StringCharacteristic extends Characteristic<String> {
     public StringCharacteristic() {
@@ -10,8 +12,9 @@ public class StringCharacteristic extends Characteristic<String> {
         value = "";
     }
     public JTextField display() {
-        JTextField field = new JTextField();
+        JTextField field = new ConfirmationField(Color.WHITE, Color.ORANGE);
         field.addActionListener(new StringSetter(this));
+        field.setText(value);
         return field;
     }
 }
@@ -25,7 +28,7 @@ class StringSetter implements ActionListener {
 
         JTextField field = (JTextField) e.getSource();
         String text = field.getText();
-        InputChecker checker = new InputChecker();
+        FormatChecker checker = new FormatChecker();
         if (checker.checkPureLetters(text)) {
             characteristic.setValue(text);
         }
