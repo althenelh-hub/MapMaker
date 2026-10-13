@@ -20,7 +20,7 @@ public class Painter implements PaintAdder, PaintChanger, PaintInjector{ //how d
         this.paintPanel = paintPanel;
         PaintOval oval = new PaintOval();
         PaintTile baseTerrain = new PaintTile();
-        baseTerrain.setColor(Color.RED);
+        baseTerrain.setColor(Color.GRAY);
         forms.put("baseTerrain", baseTerrain);
         oval.setColor(Color.BLUE);
         forms.put("Ally", oval);

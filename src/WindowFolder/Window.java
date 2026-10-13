@@ -32,13 +32,13 @@ public class Window extends JFrame {
         QueuedPaintPanel paintPanel = new QueuedPaintPanel(imageInstruction, new Point(mapGrid.getWidth(),mapGrid.getHeight()));
         MapData data = new MapData(mapGrid.columns, mapGrid.rows);
         BufferedQueuedPanelV2 bufferedPanel = new BufferedQueuedPanelV2(mapSave, paintPanel);
-        GridInstruction grid = new GridInstruction(mapGrid, Color.RED, Color.BLACK);
+        GridInstruction grid = new GridInstruction(mapGrid, Color.GRAY, Color.BLACK);
         paintPanel.setPreferredSize(new Dimension(300,300));
         add(new JScrollPane(paintPanel), BorderLayout.CENTER);
         paintPanel.setStartingPoint();
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
         FactoryFormCommunication communication = new FactoryFormCommunication();
-        communication.addFactory("Forest", new ForestFactory("Forest"), new PaintTileFactory());
+        communication.addFactory("Terrain", new ForestFactory("Terrain"), new PaintTileFactory());
         UnitFactory unitFactory = new UnitFactory("Unit");
         communication.addFactory("Unit", unitFactory, new PaintCircleFactory());
         paintPanel.addComponentListener(new SizeListener(mapGrid));

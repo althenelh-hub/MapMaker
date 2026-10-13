@@ -53,7 +53,7 @@ public class MOCreation extends JDialog {
         JPanel previewAndMode = new JPanel();
         FormManager formManager = formFactoryManager.createFormManager();
         MultiPaintPanel paintPanel = new MultiPaintPanel(formManager, new Point(100,100));
-        paintPanel.setInstruction(formManager.getForm("Forest"));
+        paintPanel.setInstruction(formManager.getForm("Terrain"));
         ChooseColor chooseColor = new ChooseColor(paintPanel);
         MObjectBox box = new MObjectBox(mObjectAdder, paintPanel , link,  currentFactoryName);
         field.addCheckers(new InputChecker[]{new NameFormatChecker(), new InputChecker() {

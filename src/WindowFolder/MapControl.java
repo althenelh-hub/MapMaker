@@ -57,7 +57,7 @@ public class MapControl {
         Graphics bufferGraphics = buffer.createGraphics();
         paintImage.fulfill(bufferGraphics, new Rectangle(0,0,0,0));
         Graphics g = image.createGraphics();
-        GridInstruction instruction = new GridInstruction(grid, Color.RED, Color.BLACK);
+        GridInstruction instruction = new GridInstruction(grid, Color.GRAY, Color.BLACK);
         instruction.fulfill(g, new Rectangle(0,0,0,0));
         PaintImageV2 bufferPaintImage = new PaintImageV2(new Point(buffer.getWidth(), buffer.getHeight()), buffer);
         bufferPaintImage.fulfill(g, new Rectangle(0,0,0,0));
