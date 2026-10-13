@@ -7,6 +7,8 @@ import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
 import Data.MapData;
+import WindowFolder.MObjectDisplay.MObjectDisplayControl;
+import WindowFolder.PaintPanel.BufferedQueuedPanelV2;
 
 public class CoordinateListener implements MouseListener { //TilePainter
     PaintInjector paintInjector;

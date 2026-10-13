@@ -4,7 +4,7 @@ import Data.Characteristics.Characteristic;
 import Data.Characteristics.CharacteristicFactory;
 import Data.DisplayItem;
 import Data.InfoModifier;
-import WindowFolder.MOManagePanel;
+import WindowFolder.MObjectDisplay.MOManagePanel;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;

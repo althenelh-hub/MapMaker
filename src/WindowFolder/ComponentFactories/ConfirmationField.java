@@ -15,7 +15,7 @@ public class ConfirmationField extends JTextField {
     Color changedColor;
     public ConfirmationField(Color confirmColor, Color changedColor, String name) {
         changed = true;
-        lastText = "*";
+        lastText = name;
         setText(name);
         this.confirmColor = confirmColor;
         this.changedColor = changedColor;
@@ -30,6 +30,7 @@ public class ConfirmationField extends JTextField {
         public void actionPerformed(ActionEvent e) {
             boolean formatCorrect = true;
             String message = "";
+            System.out.println("Confirm field");
             for(InputChecker checker : checkers) {
                 CheckMessage checkResult = checker.check(getText());
                 if(!checkResult.isValid) {
@@ -54,15 +55,26 @@ public class ConfirmationField extends JTextField {
     class ChangedField implements CaretListener {
         public void caretUpdate(CaretEvent e) {
             String text = getText();
+            System.out.println("Change field");
             boolean changeConfirm = lastText.equals(text);
             if(!changeConfirm && !changed) {
                 changed = true;
                 setBackground(changedColor);
             }
-            else if(changeConfirm && changed) {
+            else if(changeConfirm && changed && !text.isEmpty()) {
                 changed = false;
                 setBackground(confirmColor);
             }
+        }
+    }
+    public void changeState(boolean state) {
+        changed = state;
+        if(changed) {
+            setBackground(changedColor);
+        }
+        else {
+            System.out.println("Background is set");
+            setBackground(confirmColor);
         }
     }
     public void addChecker(InputChecker checker) {

@@ -10,6 +10,8 @@ import Data.*;
 import Factories.MObjectAdder;
 import PaintInstructions.*;
 import WindowFolder.ComponentFactories.*;
+import WindowFolder.MObjectDisplay.MOManagePanel;
+import WindowFolder.MObjectDisplay.MObjectData;
 import WindowFolder.PaintPanel.MultiPaintPanel;
 
 public class MOCreation extends JDialog {

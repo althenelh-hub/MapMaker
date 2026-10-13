@@ -1,15 +1,14 @@
-package WindowFolder;
+package WindowFolder.MObjectDisplay;
 
 import Data.*;
 import Data.Characteristics.Characteristic;
 import Data.Characteristics.CharacteristicFactory;
 import WindowFolder.ComponentFactories.*;
+import WindowFolder.DisplayMethod;
 import WindowFolder.Listeners.RemoveFromString;
 import WindowFolder.Listeners.*;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import java.awt.*;
 
 public class MObjectData<T extends InfoModifier> {
@@ -19,19 +18,13 @@ public class MObjectData<T extends InfoModifier> {
         this.modifier = modifier;
         this.panel = panel;
     }
-    public void add() {
+    public void add(boolean fieldState) {
         Characteristic<?> characteristic = new CharacteristicFactory().create(DisplayMethod.TextFieldInt);
-        System.out.println(characteristic);
-        createField(characteristic, "");
+        createField(characteristic, "", fieldState);
     }
-    public void createField(Characteristic<?> characteristic, String characteristicName) {
-        ConfirmationField label = new ConfirmationField(Color.WHITE, Color.ORANGE, characteristicName);
-        label.addCaretListener(new CaretListener() {
-            @Override
-            public void caretUpdate(CaretEvent e) {
-
-            }
-        });
+    public void createField(Characteristic<?> characteristic, String characteristicName, boolean fieldState) {
+        ConfirmationField label = new ConfirmationFieldFactory().create(characteristicName);
+        label.changeState(fieldState);
         ChangeView changeView = new ChangeView(modifier, label.getText(), panel, panel.getLength());
         UpdatableChangeView view = new UpdatableChangeView(changeView);
         RemoveFromString removeString = new RemoveFromString(modifier, label.getText());
@@ -40,13 +33,10 @@ public class MObjectData<T extends InfoModifier> {
         label.addActionStrategies(new ActionStrategy[]{new UpdateNameAction(modifier, label.getText(), label),
                 new UpdateValueAction(removeFromString, label), new UpdateValueAction(view, label)});
         label.addCheckers(new InputChecker[]{new NameFormatChecker(), new ContainsCheck(modifier)});
-        JButton button = new JButton();
+        JButton button = new JButtonFactory().create();
         button.addActionListener(removeString);
         button.addActionListener(new RemoveIndex(panel, panel.getLength()));
-        JComboBox<DisplayItem> comboBox = new JComboBox<>();
-        comboBox.addItem(new DisplayItem("Integer", DisplayMethod.TextFieldInt));
-        comboBox.addItem(new DisplayItem("Bool", DisplayMethod.CheckBox));
-        comboBox.addItem(new DisplayItem("String", DisplayMethod.TextFieldString));
+        JComboBox<DisplayItem> comboBox = new DisplayItemBoxFactory().create();
         comboBox.setSelectedItem(comboBox.getItemAt(characteristic.getItemIndex()));
         Component[] components = new Component[]{label, characteristic.display(), button,comboBox};
         MOField field = new MOField(components);

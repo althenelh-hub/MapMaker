@@ -2,20 +2,21 @@ package Data.Characteristics;
 
 import WindowFolder.ComponentFactories.ActionStrategy;
 import WindowFolder.ComponentFactories.ConfirmationField;
-import WindowFolder.FormatChecker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class IntegerCharacteristic extends Characteristic<Integer> {
     public IntegerCharacteristic() {
+        this(0);
+    }
+    public IntegerCharacteristic(int value) {
         super(0);
-        value = 0;
+        this.value = value;
     }
     public JTextField display() {
-        ConfirmationField textField = new ConfirmationField(Color.WHITE, Color.ORANGE);
+        ConfirmationField textField = new ConfirmationField(Color.WHITE, Color.ORANGE, value+"");
+        //textField.changeState(true);
         textField.addActionStrategy(new IntegerSetter(this, textField));
         textField.setText(value+"");
         return textField;

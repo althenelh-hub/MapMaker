@@ -4,10 +4,10 @@ import PaintInstructions.*;
 
 import java.util.*;
 import java.awt.*;
-public class BufferCommunication extends PaintPanel<PaintInstructionV2> {
+public class QueuedPaintPanel extends PaintPanel<PaintInstructionV2> {
     ArrayList<PaintInstructionV2> instructions = new ArrayList<>();
     Rectangle currentArea;
-    public BufferCommunication(PaintInstructionV2 image, Point areaSize) {
+    public QueuedPaintPanel(PaintInstructionV2 image, Point areaSize) {
         super(areaSize);
         //setStartingPoint();
         currentArea = new Rectangle(0,0,0,0);

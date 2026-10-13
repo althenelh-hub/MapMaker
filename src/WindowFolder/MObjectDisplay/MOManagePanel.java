@@ -1,4 +1,4 @@
-package WindowFolder;
+package WindowFolder.MObjectDisplay;
 
 import WindowFolder.ComponentFactories.RemoveIndexStorage;
 
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class MOManagePanel extends JPanel implements RemoveIndexStorage {
     ArrayList<MOField> fields;
-    MOManagePanel() {
+    public MOManagePanel() {
         fields = new ArrayList<>();
         setLayout(new GridLayout(0,4));
     }

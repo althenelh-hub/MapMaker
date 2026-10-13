@@ -1,4 +1,4 @@
-package WindowFolder;
+package WindowFolder.MObjectDisplay;
 import Terrain.MapObject;
 
 import javax.swing.*;

@@ -21,6 +21,7 @@ public class SizeListener implements ComponentListener {
     }
     public void componentResized(ComponentEvent event) {
         Rectangle parent = event.getComponent().getBounds();
+        System.out.println("Window size: " + event.getComponent().getParent().getBounds());
         grid.reshape(parent);
     }
 }

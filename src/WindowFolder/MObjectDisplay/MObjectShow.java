@@ -1,9 +1,10 @@
-package WindowFolder;
+package WindowFolder.MObjectDisplay;
 
 import Data.Characteristics.Characteristic;
 import Data.InfoModifier;
 import Terrain.MapObject;
 import WindowFolder.ComponentFactories.RemoveStringStorage;
+import WindowFolder.Receiver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,7 @@ public class MObjectShow extends MObjectData<MObjectFiller> {
     public MObjectShow() {
         super(new MObjectFiller(), new MOManagePanel());
         mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.add(panel);
         buttonPanel = new JPanel();
         mainPanel.add(buttonPanel);
@@ -26,7 +28,7 @@ public class MObjectShow extends MObjectData<MObjectFiller> {
         panel.emptyAll();
         mObject.shareValues(modifier);
         for(String s : modifier.getKeySet()) {
-            createField(modifier.getValue(s), s);
+            createField(modifier.getValue(s), s, false);
         }
         for(Component c : panel.getComponents()) {
             c.setEnabled(false);
@@ -35,10 +37,11 @@ public class MObjectShow extends MObjectData<MObjectFiller> {
         JButton confirmChange = new JButton("Confirm");
         JButton restoreValues = new JButton("Restore");
         JButton addButton = new JButton("Add");
+        addButton.setEnabled(false);
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                add();
+                add(false);
             }
         });
         confirmChange.setEnabled(false);
@@ -89,7 +92,7 @@ class ConfirmChange implements ActionListener {
         filler.shareValues(mObject);
     }
 }
-class ChangeableUpdateMapObject extends UpdateMapObject implements Receiver<MapObject>{
+class ChangeableUpdateMapObject extends UpdateMapObject implements Receiver<MapObject> {
     public ChangeableUpdateMapObject(Receiver<MapObject> receiver, MapObject mObject) {
         super(receiver, mObject);
     }

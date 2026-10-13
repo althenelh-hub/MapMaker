@@ -1,4 +1,4 @@
-package WindowFolder;
+package WindowFolder.MObjectDisplay;
 
 import javax.swing.*;
 import java.awt.*;

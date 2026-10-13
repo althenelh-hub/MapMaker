@@ -1,15 +1,14 @@
-package WindowFolder;
+package WindowFolder.PaintPanel;
 import java.awt.image.*;
 import PaintInstructions.*;
-import WindowFolder.PaintPanel.BufferCommunication;
 
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 public class BufferedQueuedPanelV2 {
-    public BufferCommunication instructionPanel;
+    public QueuedPaintPanel instructionPanel;
     BufferedImage image;
-    public BufferedQueuedPanelV2(BufferedImage image, BufferCommunication panel) {
+    public BufferedQueuedPanelV2(BufferedImage image, QueuedPaintPanel panel) {
         instructionPanel = panel;
         this.image = image;
 

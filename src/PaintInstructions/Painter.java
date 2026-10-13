@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import PaintInstructions.PaintForms.*;
+import WindowFolder.PaintPanel.BufferedQueuedPanelV2;
+
 public class Painter implements PaintAdder, PaintChanger, PaintInjector{ //how do I now which PaintForm I use
     BufferedQueuedPanelV2 paintPanel;
     PaintForm currentForm;

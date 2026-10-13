@@ -7,10 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import PaintInstructions.PaintChanger;
-import PaintInstructions.Painter;
 import Terrain.*;
 import Factories.*;
-import java.util.*;
+import WindowFolder.MObjectDisplay.MObjectDisplayControl;
+
 public class GameObjectPanel extends JTabbedPane {
     DialogManager dialogManager;
     MObjectChanger changer;
@@ -27,6 +27,8 @@ public class GameObjectPanel extends JTabbedPane {
         String[] factoryNames = changer.getFactoryNames();
         for(String s : factoryNames) {
             JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            //panel.setAlignmentX(CENTER_ALIGNMENT);
             addTab(s, panel);
             //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         }
@@ -66,6 +68,7 @@ class JComponentFiller {
             SetMObject setter = new SetMObject(changer, factoryName, s, paintChanger, mObjectShow);
             button.addActionListener(setter);
             target.add(button);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
         }
         if(factoryName.equals("Unit")) {
             target.add(new FactionControl(factionName));
@@ -74,6 +77,7 @@ class JComponentFiller {
     public void addButton(GameObjectPanel panel) {
         JButton button = new JButton("Add");
         button.addActionListener(new MObjectCreationAction(panel));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
         JComponent component = panel.getCurrentPanel();
         System.out.println("Component: " + component);
         component.add(button);
@@ -90,16 +94,12 @@ class FactionControl extends JPanel {
     Keeper<String> faction;
     public FactionControl(Keeper<String> factionLink) {
         faction = factionLink;
-        JLabel first = new JLabel("Ally");
-        JLabel second = new JLabel("Enemy");
         factions = new JCheckBox[]{new JCheckBox("Ally", false), new JCheckBox("Enemy", true)};
         currentFaction = 1;
         for(int i = 0;i < factions.length;i++) {
             factions[i].addActionListener(new ChangeFaction(i));
         }
-        add(first);
         add(factions[0]);
-        add(second);
         add(factions[1]);
     }
     public void changeFaction(int index) {

@@ -13,7 +13,8 @@ public class StringCharacteristic extends Characteristic<String> {
         value = "";
     }
     public JTextField display() {
-        ConfirmationField field = new ConfirmationField(Color.WHITE, Color.ORANGE);
+        ConfirmationField field = new ConfirmationField(Color.WHITE, Color.ORANGE,value);
+        field.changeState(false);
         field.addActionStrategy(new StringSetter(this, field));
         field.setText(value);
         return field;

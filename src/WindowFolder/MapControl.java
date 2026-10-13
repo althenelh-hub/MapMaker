@@ -1,22 +1,25 @@
 package WindowFolder;
-import Data.CellData;
+
 import Data.MapData;
 import PaintInstructions.GridInstruction;
 import PaintInstructions.PaintImageV2;
 import PaintInstructions.Painter;
-import WindowFolder.PaintPanel.BufferCommunication;
+import WindowFolder.PaintPanel.QueuedPaintPanel;
 
 import java.awt.*;
 import java.awt.image.*;
 
-public class MapControl extends BufferedQueuedPanelV2 {
+public class MapControl {
     MapGrid grid;
     PaintImageV2 paintImage;
     MapData data;
     Painter painter;
-    public MapControl(BufferedImage image, BufferCommunication panel, MapGrid grid, PaintImageV2 paintImageV2, MapData data,
+    BufferedImage image;
+    QueuedPaintPanel instructionPanel;
+    public MapControl(BufferedImage image, QueuedPaintPanel panel, MapGrid grid, PaintImageV2 paintImageV2, MapData data,
                       Painter painter) {
-        super(image, panel);
+        this.image = image;
+        this.instructionPanel = panel;
         this.grid = grid;
         this.paintImage = paintImageV2;
         this.data = data;

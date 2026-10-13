@@ -2,6 +2,8 @@ package WindowFolder;
 
 import Data.Characteristics.Characteristic;
 import Data.InfoModifier;
+import WindowFolder.MObjectDisplay.MOField;
+import WindowFolder.MObjectDisplay.MOManagePanel;
 
 import java.awt.*;
 

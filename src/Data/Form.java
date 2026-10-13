@@ -1,6 +1,7 @@
 package Data;
 
 import Data.Characteristics.Characteristic;
+import Data.Characteristics.IntegerCharacteristic;
 import Terrain.MapObject;
 import WindowFolder.Receiver;
 
@@ -12,6 +13,7 @@ public class Form implements InfoModifier, Receiver<String> {
     public Form(String name) {
         this.name = name;
         characteristics = new HashMap<>();
+        characteristics.put("Movement", new IntegerCharacteristic(5));
     }
     public void receive(String value) {
         name = value;

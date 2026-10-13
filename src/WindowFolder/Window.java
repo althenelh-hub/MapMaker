@@ -13,7 +13,11 @@ import PaintInstructions.*;
 import PaintInstructions.PaintForms.PaintCircleFactory;
 import PaintInstructions.PaintForms.PaintTileFactory;
 import PaintInstructions.Painter;
-import WindowFolder.PaintPanel.BufferCommunication;
+import WindowFolder.ComponentFactories.ColorManager;
+import WindowFolder.ComponentFactories.ComponentSizeManager;
+import WindowFolder.MObjectDisplay.MObjectDisplayControl;
+import WindowFolder.PaintPanel.BufferedQueuedPanelV2;
+import WindowFolder.PaintPanel.QueuedPaintPanel;
 
 public class Window extends JFrame {
     public Window() {
@@ -25,12 +29,12 @@ public class Window extends JFrame {
         setMinimumSize(new Dimension(mapGrid.getWidth() + 100,mapGrid.getHeight()+100));
         BufferedImage mapSave = new BufferedImage(1000,1000, BufferedImage.TYPE_INT_RGB);
         PaintImageV2 imageInstruction = new PaintImageV2(new Point(mapGrid.getWidth(),mapGrid.getHeight()), mapSave);
-        BufferCommunication paintPanel = new BufferCommunication(imageInstruction, new Point(mapGrid.getWidth(),mapGrid.getHeight()));
+        QueuedPaintPanel paintPanel = new QueuedPaintPanel(imageInstruction, new Point(mapGrid.getWidth(),mapGrid.getHeight()));
         MapData data = new MapData(mapGrid.columns, mapGrid.rows);
         BufferedQueuedPanelV2 bufferedPanel = new BufferedQueuedPanelV2(mapSave, paintPanel);
-        GridInstruction grid = new GridInstruction(mapGrid, Color.RED, Color.BLUE);
+        GridInstruction grid = new GridInstruction(mapGrid, Color.RED, Color.BLACK);
         paintPanel.setPreferredSize(new Dimension(300,300));
-        add(paintPanel, BorderLayout.CENTER);
+        add(new JScrollPane(paintPanel), BorderLayout.CENTER);
         paintPanel.setStartingPoint();
         bufferedPanel.paintInit(grid, new Rectangle(0,0,mapGrid.getWidth(),mapGrid.getHeight()));
         FactoryFormCommunication communication = new FactoryFormCommunication();
@@ -49,6 +53,10 @@ public class Window extends JFrame {
         add(displayControl, BorderLayout.EAST);
         MapControl mapControl = new MapControl(mapSave, paintPanel, mapGrid, imageInstruction, data, painter);
         SizePanel sizePanel = new SizePanel(10, 10,20, mapControl);
+        ColorManager.addColor("Confirm", Color.WHITE);
+        ColorManager.addColor("Change", Color.ORANGE);
+        ComponentSizeManager sizeManager = new ComponentSizeManager(gameObjectPanel, this, paintPanel, displayControl);
+        sizeManager.sizeControl();
         add(sizePanel, BorderLayout.SOUTH);
     }
 
