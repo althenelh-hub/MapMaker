@@ -9,6 +9,7 @@ public class MObjectDisplayControl extends JScrollPane {
     public MObjectDisplayControl(JPanel panel) {
         super(panel);
         mainPanel = panel;
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     }
     ArrayList<MObjectShow> panels = new ArrayList<>();
     public void displayMObjects(MapObject[] mObjects) {

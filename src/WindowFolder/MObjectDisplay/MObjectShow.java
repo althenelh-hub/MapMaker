@@ -22,6 +22,10 @@ public class MObjectShow extends MObjectData<MObjectFiller> {
         mainPanel.add(panel);
         buttonPanel = new JPanel();
         mainPanel.add(buttonPanel);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        mainPanel.setPreferredSize(new Dimension(screenSize.width/15, screenSize.height/15));
+        mainPanel.setMaximumSize(new Dimension(300,100));
+        mainPanel.setAlignmentY(Component.TOP_ALIGNMENT);
     }
     public void show(MapObject mObject) {
         buttonPanel.removeAll();
