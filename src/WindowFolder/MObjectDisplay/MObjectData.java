@@ -39,6 +39,9 @@ public class MObjectData<T extends InfoModifier> {
         JComboBox<DisplayItem> comboBox = new DisplayItemBoxFactory().create();
         comboBox.setSelectedItem(comboBox.getItemAt(characteristic.getItemIndex()));
         JComponent[] components = new JComponent[]{label, characteristic.display(), button,comboBox};
+        for(JComponent c : components) {
+            c.setAlignmentY(Component.TOP_ALIGNMENT);
+        }
         MOField field = new MOField(components);
         comboBox.addItemListener(changeView);
         panel.addField(field);
